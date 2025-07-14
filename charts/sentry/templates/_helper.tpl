@@ -665,6 +665,7 @@ Set external Clickhouse password from existingSecret
       name: {{ include "clickhouse.secretName" $.Subcharts.clickhouse | quote }}
       key: {{ include "clickhouse.secretKey" $.Subcharts.clickhouse | quote }}
 {{- end }}
+- name: CLICKHOUSE_HOST
   value: {{ include "sentry.clickhouse.host" . | quote }}
 - name: CLICKHOUSE_MAX_CONNECTIONS
   value: {{ .Values.snuba.clickhouse.maxConnections | quote }}

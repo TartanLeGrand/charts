@@ -11,9 +11,6 @@ dependencies:
 - name: clickhouse
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 9.3.9
-- name: zookeeper
-  repository: oci://registry-1.docker.io/bitnamicharts
-  version: 11.4.11
 - name: rabbitmq
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 11.16.2
@@ -23,5 +20,5 @@ dependencies:
 - name: nginx
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 18.2.5
-digest: sha256:26070535f2490a9fca025ce85c009bebfae2df6dd3aca14b74433492bbc769c8
-generated: "2025-07-14T12:33:13.424408414+02:00"
+digest: sha256:02294d4beb13c3545c2de218f9cdadeaed9dc520a35e7c53ddcfe6cec8320129
+generated: "2025-07-14T16:38:18.85587007+02:00"

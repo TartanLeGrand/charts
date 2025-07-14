@@ -21,10 +21,6 @@ dependencies:
     repository: oci://registry-1.docker.io/bitnamicharts
     version: 9.3.9
     condition: clickhouse.enabled
-  - name: zookeeper
-    repository: oci://registry-1.docker.io/bitnamicharts
-    version: 11.4.11
-    condition: zookeeper.enabled
   - name: rabbitmq
     repository: oci://registry-1.docker.io/bitnamicharts
     version: 11.16.2

@@ -2333,18 +2333,6 @@ externalClickhouse:
   ##
   # distributedClusterName: distributed_test_shard_localhost
 
-# Settings for Zookeeper.
-# See https://github.com/bitnami/charts/tree/master/bitnami/zookeeper
-zookeeper:
-  enabled: true
-  nameOverride: zookeeper-clickhouse
-  replicaCount: 1
-  nodeSelector: {}
-  # tolerations: []
-  ## When increasing the number of exceptions, you need to increase persistence.size
-  # persistence:
-  #   size: 8Gi
-
 # Settings for Kafka.
 # See https://github.com/bitnami/charts/tree/master/bitnami/kafka
 kafka:
