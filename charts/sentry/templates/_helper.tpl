@@ -397,7 +397,7 @@ Set ClickHouse cluster name
 */}}
 {{- define "sentry.clickhouse.cluster.name" -}}
 {{- if .Values.clickhouse.enabled -}}
-{{ .Release.Name | printf "%s-clickhouse" }}
+{{ include "clickhouse.headlessServiceName" $.Subcharts.clickhouse }}
 {{- else -}}
 {{ required "A valid .Values.externalClickhouse.clusterName is required" .Values.externalClickhouse.clusterName }}
 {{- end -}}
