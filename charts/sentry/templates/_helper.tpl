@@ -404,17 +404,6 @@ Set ClickHouse cluster name
 {{- end -}}
 
 {{/*
-Set ClickHouse distributed cluster name
-*/}}
-{{- define "sentry.clickhouse.distributed.cluster.name" -}}
-{{- if .Values.clickhouse.enabled -}}
-{{ .Release.Name | printf "%s-clickhouse" }}
-{{- else -}}
-{{ default .Values.externalClickhouse.clusterName .Values.externalClickhouse.distributedClusterName }}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Set ClickHouse secure setting
 */}}
 {{- define "sentry.clickhouse.secure" -}}

@@ -80,8 +80,8 @@ settings.py: |
       "single_node": False,
       {{- end }}
       {{- if or .Values.clickhouse.enabled (not .Values.externalClickhouse.singleNode) }}
-      "cluster_name": {{ include "sentry.clickhouse.cluster.name" . | quote }},
-      "distributed_cluster_name": {{ include "sentry.clickhouse.cluster.name" . | quote }},
+      "cluster_name": {{ default "default" .Values.clickhouse.clusterName | quote }},
+      "distributed_cluster_name": {{ default "default" .Values.clickhouse.clusterName | printf "%s-clickhouse" }},
       {{- end }}
     },
   ]
