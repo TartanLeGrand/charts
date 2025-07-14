@@ -2353,7 +2353,7 @@ kafka:
     ## Increasing the replicationFactor enhances data reliability during Kafka pod failures by replicating data across multiple brokers.
     # Note that existing topics will remain with replicationFactor: 1 when updated.
     replicationFactor: 3
-    enabled: true
+    enabled: false
     # Topic list is based on files below.
     # - https://github.com/getsentry/snuba/blob/master/snuba/utils/streams/topics.py
     # - https://github.com/getsentry/sentry/blob/master/src/sentry/conf/types/kafka_definition.py
@@ -2692,7 +2692,7 @@ externalPostgresql:
 
 rabbitmq:
   ## If disabled, Redis will be used instead as the broker.
-  enabled: true
+  enabled: false
   vhost: /
   clustering:
     forceBoot: true
