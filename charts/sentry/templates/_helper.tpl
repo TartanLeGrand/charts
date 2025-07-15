@@ -333,7 +333,7 @@ Set ClickHouse host
 */}}
 {{- define "sentry.clickhouse.host" -}}
 {{- if .Values.clickhouse.enabled -}}
-{{- template "sentry.clickhouse.fullname" . -}}
+{{- include "clickhouse.headlessServiceName" $.Subcharts.clickhouse -}}
 {{- else -}}
 {{ required "A valid .Values.externalClickhouse.host is required" .Values.externalClickhouse.host }}
 {{- end -}}
