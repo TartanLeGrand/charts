@@ -31,6 +31,8 @@ settings.py: |
     KAFKA_TOPIC_MAP[topic.value] = f"{SENTRY_CHARTS_KAFKA_TOPIC_PREFIX}{topic.value}"
   {{- end }}
 
+  SENTRY_DISTRIBUTED_CLICKHOUSE_TABLES = True
+
   # Clickhouse Options
   CLUSTERS = [
     {
@@ -75,7 +77,7 @@ settings.py: |
         clickhouse configured can be configured any way you choose
       */}}
       {{- if and .Values.externalClickhouse.singleNode (not .Values.clickhouse.enabled) }}
-      "single_node": True,
+      "single_node": False,
       {{- else }}
       "single_node": False,
       {{- end }}
