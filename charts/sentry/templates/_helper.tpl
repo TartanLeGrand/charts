@@ -52,6 +52,13 @@
 {{- default .Chart.AppVersion .Values.images.vroom.tag -}}
 {{- end -}}
 
+
+{{- define "taskbroker.image" -}}
+{{- default "getsentry/taskbroker" .Values.images.taskbroker.repository -}}
+:
+{{- default .Chart.AppVersion .Values.images.taskbroker.tag -}}
+{{- end -}}
+
 {{/*
 Expand the name of the chart.
 */}}
@@ -686,6 +693,15 @@ Set external Clickhouse password from existingSecret
   value: "file:///var/vroom/sentry-profiles"
 - name: SENTRY_SNUBA_HOST
   value: http://{{ template "sentry.fullname" . }}-snuba:{{ template "snuba.port" . }}
+{{- end -}}
+
+{{- define "taskbroker.env" -}}
+- name: TASKBROKER_KAFKA_CLUSTER
+  value: {{ include "sentry.kafka.bootstrap_servers_string" . | quote }}
+- name: TASKBROKER_KAFKA_DEADLETTER_CLUSTER
+  value: {{ include "sentry.kafka.bootstrap_servers_string" . | quote }}
+- name: TASKBROKER_DB_PATH
+  value: "/opt/sqlite/taskbroker-activations.sqlite"
 {{- end -}}
 
 {{/*
