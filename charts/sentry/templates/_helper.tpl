@@ -705,6 +705,13 @@ Set external Clickhouse password from existingSecret
 {{- end -}}
 
 {{/*
+Return the taskbroker service host name
+*/}}
+{{- define "taskbroker.host" -}}
+{{- template "sentry.fullname" . }}-taskbroker
+{{- end -}}
+
+{{/*
 Common Sentry environment variables
 */}}
 {{- define "sentry.env" -}}
