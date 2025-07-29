@@ -872,7 +872,7 @@ sentry:
     # autoOffsetReset: "earliest"
     # noStrictOffsetReset: false
 
-  subscriptionConsumerResultsEapItems:
+  uptimeResults:
     enabled: true
     replicas: 1
     env: []
