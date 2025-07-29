@@ -81,6 +81,7 @@ spec:
         image: "{{ template "sentry.image" . }}"
         imagePullPolicy: {{ default "IfNotPresent" .Values.images.sentry.pullPolicy }}
         env:
+{{- include "taskbroker.env" . | nindent 8 }}
 {{- include "sentry.env" . | nindent 8 }}
 {{- if .Values.sentry.env }}
 {{ toYaml .Values.sentry.env | indent 8 }}
