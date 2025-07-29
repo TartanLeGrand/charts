@@ -447,7 +447,6 @@ sentry.conf.py: |-
             "organizations:continuous-profiling-billing",
             "organizations:on-demand-metrics-prefill",
             "organizations:custom-metrics",
-            "organizations:org-ingest-subdomains",
             "organizations:sentry-pride-logo-footer",
             "organizations:seer-based-priority",
             "organizations:integrations-vercel",
@@ -459,7 +458,13 @@ sentry.conf.py: |-
             "projects:discard-groups",
             "projects:servicehooks"
           )
-          + ("auth:register",
+
+          {{- if .Values.sentry.features.orgSubdomains }}
+          + ("organizations:org-ingest-subdomains")
+          {{ end -}}
+
+          + (
+          "auth:register",
           "organizations:create",
           "relocation:enabled",
           "organizations:alert-allow-indexed",
