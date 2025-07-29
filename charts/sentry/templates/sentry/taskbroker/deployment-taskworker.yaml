@@ -78,8 +78,8 @@ spec:
         args:
           - run
           - taskworker
-          --concurrency=4
-          --rpc-host=taskbroker:50051
+          - --concurrency=4
+          - --rpc-host=taskbroker:50051
         image: "{{ template "sentry.image" . }}"
         imagePullPolicy: {{ default "IfNotPresent" .Values.images.sentry.pullPolicy }}
         env:
