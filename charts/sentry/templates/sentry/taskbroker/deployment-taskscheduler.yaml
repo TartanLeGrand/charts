@@ -76,7 +76,7 @@ spec:
 {{- end }}
         command: ["sentry"]
         args:
-          - run,
+          - run
           - taskworker-scheduler
         image: "{{ template "sentry.image" . }}"
         imagePullPolicy: {{ default "IfNotPresent" .Values.images.sentry.pullPolicy }}

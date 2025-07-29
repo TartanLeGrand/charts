@@ -716,6 +716,10 @@ Common Sentry environment variables
   value: http://{{ template "sentry.fullname" . }}-snuba:{{ template "snuba.port" . }}
 - name: VROOM
   value: http://{{ template "sentry.fullname" . }}-vroom:{{ template "vroom.port" . }}
+- name: REDIS_HOST
+  value: {{ $redisHost | quote }}
+- name: REDIS_PORT
+  value: {{ $redisPort | quote }}
 {{- if .Values.sentry.existingSecret }}
 - name: SENTRY_SECRET_KEY
   valueFrom:
