@@ -26,6 +26,7 @@ spec:
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   template:
     metadata:
+			checksum/configmap.yaml: {{ include "sentry.config" . | sha256sum }}
       annotations:
         {{- if .Values.sentry.annotations }}
 {{ toYaml .Values.sentry.annotations | indent 8 }}
@@ -105,3 +106,7 @@ spec:
       {{- if .Values.sentry.priorityClassName }}
       priorityClassName: "{{ .Values.sentry.priorityClassName }}"
       {{- end }}
+      volumes:
+      - name: config
+        configMap:
+          name: {{ template "sentry.fullname" . }}-sentry
