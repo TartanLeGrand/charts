@@ -145,7 +145,7 @@ taskbroker:
   persistence:
     enabled: true  # Set true for using PersistentVolumeClaim, false for emptyDir
     accessModes:
-      - ReadWriteOnce
+      - ReadWriteMany
     # storageClassName: standard
     size: "10Gi"
 
