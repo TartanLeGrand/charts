@@ -13,6 +13,11 @@ metadata:
     heritage: "{{ .Release.Service }}"
 spec:
   clusterIP: None
+  ports:
+  - name: rpc
+    port: 50051
+    targetPort: 50051
+    protocol: TCP
   selector:
     app: {{ template "sentry.fullname" . }}
     role: taskbroker
