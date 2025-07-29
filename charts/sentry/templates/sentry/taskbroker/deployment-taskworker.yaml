@@ -74,7 +74,12 @@ spec:
         args:
 {{ toYaml .Values.sentry.args | indent 10 }}
 {{- end }}
-        command: ["run", "taskworker"]
+        command: ["sentry"]
+        args:
+          - run
+          - taskworker
+          --concurrency=4
+          --rpc-host=taskbroker:50051
         image: "{{ template "sentry.image" . }}"
         imagePullPolicy: {{ default "IfNotPresent" .Values.images.sentry.pullPolicy }}
         env:

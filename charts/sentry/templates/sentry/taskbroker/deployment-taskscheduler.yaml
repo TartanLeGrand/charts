@@ -74,7 +74,10 @@ spec:
         args:
 {{ toYaml .Values.sentry.args | indent 10 }}
 {{- end }}
-        command: ["run", "taskworker-scheduler"]
+        command: ["sentry"]
+        args:
+          - run,
+          - taskworker-scheduler
         image: "{{ template "sentry.image" . }}"
         imagePullPolicy: {{ default "IfNotPresent" .Values.images.sentry.pullPolicy }}
         env:
