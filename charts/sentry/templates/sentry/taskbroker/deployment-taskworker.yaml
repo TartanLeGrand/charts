@@ -26,8 +26,8 @@ spec:
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   template:
     metadata:
-			checksum/configmap.yaml: {{ include "sentry.config" . | sha256sum }}
       annotations:
+        checksum/configmap.yaml: {{ include "sentry.config" . | sha256sum }}
         {{- if .Values.sentry.annotations }}
 {{ toYaml .Values.sentry.annotations | indent 8 }}
         {{- end }}
