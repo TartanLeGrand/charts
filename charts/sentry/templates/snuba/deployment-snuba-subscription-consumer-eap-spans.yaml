@@ -91,12 +91,16 @@ spec:
           - "--followed-consumer-group=eap_spans_group"
           - "--schedule-ttl=60"
           - "--stale-threshold-seconds=900"
+          {{- if .Values.snuba.subscriptionConsumerEapSpans.livenessProbe.enabled }}
+          - "--health-check-file"
+          - "/tmp/health.txt"
+          {{- end }}
         {{- if .Values.snuba.subscriptionConsumerEapSpans.livenessProbe.enabled }}
         livenessProbe:
           exec:
             command:
-              - snuba
-              - health
+              - rm
+              - /tmp/health.txt
           initialDelaySeconds: {{ .Values.snuba.subscriptionConsumerEapSpans.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.snuba.subscriptionConsumerEapSpans.livenessProbe.periodSeconds }}
         {{- end }}
