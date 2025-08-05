@@ -336,7 +336,7 @@ sentry.conf.py: |-
   # Tasks #
   #########
   # Disable taskworker and continue using celery.
-  SENTRY_OPTIONS["taskworker.enabled"] = False
+  SENTRY_OPTIONS["taskworker.enabled"] = True
 
   ##############
   # Web Server #
