@@ -332,6 +332,12 @@ sentry.conf.py: |-
   SENTRY_RELEASE_HEALTH = "sentry.release_health.metrics.MetricsReleaseHealthBackend"
   SENTRY_RELEASE_MONITOR = "sentry.release_health.release_monitor.metrics.MetricReleaseMonitorBackend"
 
+  #########
+  # Tasks #
+  #########
+  # Disable taskworker and continue using celery.
+  SENTRY_OPTIONS["taskworker.enabled"] = False
+
   ##############
   # Web Server #
   ##############
