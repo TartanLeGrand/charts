@@ -2419,7 +2419,7 @@ kafka:
         config:
           "message.timestamp.type": LogAppendTime
       - name: outcomes
-      - name: outcomes_raw
+      - name: outcomes-raw
       - name: outcomes-dlq
       - name: outcomes-billing
       - name: outcomes-billing-dlq
