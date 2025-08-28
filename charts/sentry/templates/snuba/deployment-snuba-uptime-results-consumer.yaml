@@ -1,9 +1,9 @@
 {{- if has "feature-complete" .Values.profiles }}
-{{- if .Values.snuba.uptimeConsumer.enabled }}
+{{- if .Values.snuba.uptimeResultsConsumer.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "sentry.fullname" . }}-snuba-uptime-consumer
+  name: {{ template "sentry.fullname" . }}-snuba-uptime-results-consumer
   labels:
     app: {{ template "sentry.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
@@ -24,45 +24,45 @@ spec:
     matchLabels:
         app: {{ template "sentry.fullname" . }}
         release: "{{ .Release.Name }}"
-        role: snuba-transactions-consumer
-  replicas: {{ .Values.snuba.uptimeConsumer.replicas }}
+        role: snuba-uptime-results-consumer
+  replicas: {{ .Values.snuba.uptimeResultsConsumer.replicas }}
   template:
     metadata:
       annotations:
         checksum/snubaSettingsPy: {{ .Values.config.snubaSettingsPy | sha256sum }}
         checksum/config.yaml: {{ include "sentry.snuba.config" . | sha256sum }}
-        {{- if .Values.snuba.uptimeConsumer.annotations }}
-{{ toYaml .Values.snuba.uptimeConsumer.annotations | indent 8 }}
+        {{- if .Values.snuba.uptimeResultsConsumer.annotations }}
+{{ toYaml .Values.snuba.uptimeResultsConsumer.annotations | indent 8 }}
         {{- end }}
       labels:
         app: {{ template "sentry.fullname" . }}
         release: "{{ .Release.Name }}"
-        role: snuba-transactions-consumer
-        {{- if .Values.snuba.uptimeConsumer.podLabels }}
-{{ toYaml .Values.snuba.uptimeConsumer.podLabels | indent 8 }}
+        role: snuba-uptime-results-consumer
+        {{- if .Values.snuba.uptimeResultsConsumer.podLabels }}
+{{ toYaml .Values.snuba.uptimeResultsConsumer.podLabels | indent 8 }}
         {{- end }}
     spec:
       affinity:
-      {{- if .Values.snuba.uptimeConsumer.affinity }}
-{{ toYaml .Values.snuba.uptimeConsumer.affinity | indent 8 }}
+      {{- if .Values.snuba.uptimeResultsConsumer.affinity }}
+{{ toYaml .Values.snuba.uptimeResultsConsumer.affinity | indent 8 }}
       {{- end }}
-      {{- if .Values.snuba.uptimeConsumer.nodeSelector }}
+      {{- if .Values.snuba.uptimeResultsConsumer.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.snuba.uptimeConsumer.nodeSelector | indent 8 }}
+{{ toYaml .Values.snuba.uptimeResultsConsumer.nodeSelector | indent 8 }}
       {{- else if .Values.global.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.global.nodeSelector | indent 8 }}
       {{- end }}
-      {{- if .Values.snuba.uptimeConsumer.tolerations }}
+      {{- if .Values.snuba.uptimeResultsConsumer.tolerations }}
       tolerations:
-{{ toYaml .Values.snuba.uptimeConsumer.tolerations | indent 8 }}
+{{ toYaml .Values.snuba.uptimeResultsConsumer.tolerations | indent 8 }}
       {{- else if .Values.global.tolerations }}
       tolerations:
 {{ toYaml .Values.global.tolerations | indent 8 }}
       {{- end }}
-      {{- if .Values.snuba.uptimeConsumer.topologySpreadConstraints }}
+      {{- if .Values.snuba.uptimeResultsConsumer.topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .Values.snuba.uptimeConsumer.topologySpreadConstraints | indent 8 }}
+{{ toYaml .Values.snuba.uptimeResultsConsumer.topologySpreadConstraints | indent 8 }}
       {{- end }}
       {{- if .Values.images.snuba.imagePullSecrets }}
       imagePullSecrets:
@@ -75,9 +75,9 @@ spec:
       dnsConfig:
 {{ toYaml .Values.dnsConfig | indent 8 }}
       {{- end }}
-      {{- if .Values.snuba.uptimeConsumer.securityContext }}
+      {{- if .Values.snuba.uptimeResultsConsumer.securityContext }}
       securityContext:
-{{ toYaml .Values.snuba.uptimeConsumer.securityContext | indent 8 }}
+{{ toYaml .Values.snuba.uptimeResultsConsumer.securityContext | indent 8 }}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}-snuba
@@ -87,63 +87,63 @@ spec:
           - "snuba"
           - {{ if .Values.snuba.rustConsumer -}}"rust-consumer"{{- else -}}"consumer"{{- end }}
           - "--storage"
-          - "transactions"
+          - "uptime_monitor_checks"
           - "--consumer-group"
-          - "transactions_group"
-          {{- if .Values.snuba.uptimeConsumer.autoOffsetReset }}
+          - "snuba-uptime-results"
+          {{- if .Values.snuba.uptimeResultsConsumer.autoOffsetReset }}
           - "--auto-offset-reset"
-          - "{{ .Values.snuba.uptimeConsumer.autoOffsetReset }}"
+          - "{{ .Values.snuba.uptimeResultsConsumer.autoOffsetReset }}"
           {{- end }}
-          {{- if .Values.snuba.uptimeConsumer.maxBatchSize }}
+          {{- if .Values.snuba.uptimeResultsConsumer.maxBatchSize }}
           - "--max-batch-size"
-          - "{{ .Values.snuba.uptimeConsumer.maxBatchSize }}"
+          - "{{ .Values.snuba.uptimeResultsConsumer.maxBatchSize }}"
           {{- end }}
-          {{- if .Values.snuba.uptimeConsumer.processes }}
+          {{- if .Values.snuba.uptimeResultsConsumer.processes }}
           - "--processes"
-          - "{{ .Values.snuba.uptimeConsumer.processes }}"
+          - "{{ .Values.snuba.uptimeResultsConsumer.processes }}"
           {{- end }}
-          {{- if .Values.snuba.uptimeConsumer.inputBlockSize }}
+          {{- if .Values.snuba.uptimeResultsConsumer.inputBlockSize }}
           - "--input-block-size"
-          - "{{ .Values.snuba.uptimeConsumer.inputBlockSize }}"
+          - "{{ .Values.snuba.uptimeResultsConsumer.inputBlockSize }}"
           {{- end }}
-          {{- if .Values.snuba.uptimeConsumer.outputBlockSize }}
+          {{- if .Values.snuba.uptimeResultsConsumer.outputBlockSize }}
           - "--output-block-size"
-          - "{{ .Values.snuba.uptimeConsumer.outputBlockSize }}"
+          - "{{ .Values.snuba.uptimeResultsConsumer.outputBlockSize }}"
           {{- end }}
-          {{- if .Values.snuba.uptimeConsumer.maxBatchTimeMs }}
+          {{- if .Values.snuba.uptimeResultsConsumer.maxBatchTimeMs }}
           - "--max-batch-time-ms"
-          - "{{ .Values.snuba.uptimeConsumer.maxBatchTimeMs }}"
+          - "{{ .Values.snuba.uptimeResultsConsumer.maxBatchTimeMs }}"
           {{- end }}
-          {{- if .Values.snuba.uptimeConsumer.queuedMaxMessagesKbytes }}
+          {{- if .Values.snuba.uptimeResultsConsumer.queuedMaxMessagesKbytes }}
           - "--queued-max-messages-kbytes"
-          - "{{ .Values.snuba.uptimeConsumer.queuedMaxMessagesKbytes }}"
+          - "{{ .Values.snuba.uptimeResultsConsumer.queuedMaxMessagesKbytes }}"
           {{- end }}
-          {{- if .Values.snuba.uptimeConsumer.queuedMinMessages }}
+          {{- if .Values.snuba.uptimeResultsConsumer.queuedMinMessages }}
           - "--queued-min-messages"
-          - "{{ .Values.snuba.uptimeConsumer.queuedMinMessages }}"
+          - "{{ .Values.snuba.uptimeResultsConsumer.queuedMinMessages }}"
           {{- end }}
-          {{- if .Values.snuba.uptimeConsumer.noStrictOffsetReset }}
+          {{- if .Values.snuba.uptimeResultsConsumer.noStrictOffsetReset }}
           - "--no-strict-offset-reset"
           {{- end }}
-          {{- if .Values.snuba.uptimeConsumer.livenessProbe.enabled }}
+          {{- if .Values.snuba.uptimeResultsConsumer.livenessProbe.enabled }}
           - "--health-check-file"
           - "/tmp/health.txt"
           {{- end }}
-        {{- if .Values.snuba.uptimeConsumer.livenessProbe.enabled }}
+        {{- if .Values.snuba.uptimeResultsConsumer.livenessProbe.enabled }}
         livenessProbe:
           exec:
             command:
               - rm
               - /tmp/health.txt
-          initialDelaySeconds: {{ .Values.snuba.uptimeConsumer.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.snuba.uptimeConsumer.livenessProbe.periodSeconds }}
+          initialDelaySeconds: {{ .Values.snuba.uptimeResultsConsumer.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.snuba.uptimeResultsConsumer.livenessProbe.periodSeconds }}
         {{- end }}
         ports:
         - containerPort: {{ template "snuba.port" }}
         env:
 {{ include "sentry.snuba.env" . | indent 8 }}
-{{- if .Values.snuba.uptimeConsumer.env }}
-{{ toYaml .Values.snuba.uptimeConsumer.env | indent 8 }}
+{{- if .Values.snuba.uptimeResultsConsumer.env }}
+{{ toYaml .Values.snuba.uptimeResultsConsumer.env | indent 8 }}
 {{- end }}
         envFrom:
         - secretRef:
@@ -152,17 +152,17 @@ spec:
         - mountPath: /etc/snuba
           name: config
           readOnly: true
-{{- if .Values.snuba.uptimeConsumer.volumeMounts }}
-{{ toYaml .Values.snuba.uptimeConsumer.volumeMounts | indent 8 }}
+{{- if .Values.snuba.uptimeResultsConsumer.volumeMounts }}
+{{ toYaml .Values.snuba.uptimeResultsConsumer.volumeMounts | indent 8 }}
 {{- end }}
         resources:
-{{ toYaml .Values.snuba.uptimeConsumer.resources | indent 12 }}
-{{- if .Values.snuba.uptimeConsumer.containerSecurityContext }}
+{{ toYaml .Values.snuba.uptimeResultsConsumer.resources | indent 12 }}
+{{- if .Values.snuba.uptimeResultsConsumer.containerSecurityContext }}
         securityContext:
-{{ toYaml .Values.snuba.uptimeConsumer.containerSecurityContext | indent 12 }}
+{{ toYaml .Values.snuba.uptimeResultsConsumer.containerSecurityContext | indent 12 }}
 {{- end }}
-{{- if .Values.snuba.uptimeConsumer.sidecars }}
-{{ toYaml .Values.snuba.uptimeConsumer.sidecars | indent 6 }}
+{{- if .Values.snuba.uptimeResultsConsumer.sidecars }}
+{{ toYaml .Values.snuba.uptimeResultsConsumer.sidecars | indent 6 }}
 {{- end }}
 {{- if .Values.global.sidecars }}
 {{ toYaml .Values.global.sidecars | indent 6 }}
@@ -174,8 +174,8 @@ spec:
         - name: config
           configMap:
             name: {{ template "sentry.fullname" . }}-snuba
-{{- if .Values.snuba.uptimeConsumer.volumes }}
-{{ toYaml .Values.snuba.uptimeConsumer.volumes | indent 8 }}
+{{- if .Values.snuba.uptimeResultsConsumer.volumes }}
+{{ toYaml .Values.snuba.uptimeResultsConsumer.volumes | indent 8 }}
 {{- end }}
 {{- if .Values.global.volumes }}
 {{ toYaml .Values.global.volumes | indent 8 }}

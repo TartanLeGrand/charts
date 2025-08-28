@@ -63,6 +63,11 @@ images:
     # tag: Chart.AppVersion
     # pullPolicy: IfNotPresent
     imagePullSecrets: []
+  uptimeChecker:
+    # repository: getsentry/uptime-checker
+    # tag: Chart.AppVersion
+    # pullPolicy: IfNotPresent
+    imagePullSecrets: []
 
 serviceAccount:
   # serviceAccount.annotations -- Additional Service Account annotations.
@@ -109,6 +114,30 @@ vroom:
     minReplicas: 2
     maxReplicas: 5
     targetCPUUtilizationPercentage: 50
+  sidecars: []
+  # topologySpreadConstraints: []
+  volumes: []
+  volumeMounts: []
+
+uptimeChecker:
+  # annotations: {}
+  # args: []
+  replicas: 1
+  env: []
+  resources: {}
+  #  requests:
+  #    cpu: 100m
+  #    memory: 700Mi
+  affinity: {}
+  nodeSelector: {}
+  securityContext: {}
+  containerSecurityContext: {}
+  # priorityClassName: ""
+  service:
+    annotations: {}
+  # tolerations: []
+  # podLabels: {}
+
   sidecars: []
   # topologySpreadConstraints: []
   volumes: []
@@ -253,11 +282,11 @@ sentry:
 
   features:
     orgSubdomains: false
-    vstsLimitedScopes: true
     enableProfiling: false
     enableSessionReplay: true
     enableFeedback: false
     enableSpan: false
+    enableUptime: false
 
   # example customFeature to enable Metrics(beta) https://docs.sentry.io/product/metrics/
   # customFeatures:
@@ -852,28 +881,7 @@ sentry:
     # logLevel: "WARNING" # DEBUG|INFO|WARNING|ERROR|CRITICAL|FATAL
     # logFormat: "machine" # human|machine
 
-  subscriptionConsumerEapSpans:
-    enabled: true
-    replicas: 1
-    env: []
-    resources: {}
-    affinity: {}
-    nodeSelector: {}
-    securityContext: {}
-    topologySpreadConstraints: []
-    containerSecurityContext: {}
-    # tolerations: []
-    # podLabels: {}
-    livenessProbe:
-      enabled: true
-      initialDelaySeconds: 5
-      periodSeconds: 320
-    # volumes: []
-    # volumeMounts: []
-    # autoOffsetReset: "earliest"
-    # noStrictOffsetReset: false
-
-  uptimeResults:
+  subscriptionConsumerResultsEapItems:
     enabled: true
     replicas: 1
     env: []
@@ -920,6 +928,31 @@ sentry:
     # volumeMounts: []
 
   subscriptionConsumerTransactions:
+    enabled: true
+    replicas: 1
+    env: []
+    resources: {}
+    #  requests:
+    #    cpu: 200m
+    #    memory: 500Mi
+    affinity: {}
+    nodeSelector: {}
+    securityContext: {}
+    containerSecurityContext: {}
+    # tolerations: []
+    # podLabels: {}
+    sidecars: []
+    topologySpreadConstraints: []
+    volumes: []
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 5
+      periodSeconds: 320
+    # autoOffsetReset: "earliest"
+    # noStrictOffsetReset: false
+    # volumeMounts: []
+
+  uptimeResults:
     enabled: true
     replicas: 1
     env: []
@@ -1222,39 +1255,6 @@ snuba:
     #     emptyDir:
     #       medium: Memory
 
-  eapItemsSpanConsumer:
-    enabled: true
-    replicas: 1
-    env: []
-    resources: {}
-    affinity: {}
-    nodeSelector: {}
-    securityContext: {}
-    topologySpreadConstraints: []
-    containerSecurityContext: {}
-    # tolerations: []
-    # podLabels: {}
-    # autoOffsetReset: "earliest"
-    livenessProbe:
-      enabled: true
-      initialDelaySeconds: 5
-      periodSeconds: 320
-    # maxBatchSize: ""
-    # processes: ""
-    # inputBlockSize: ""
-    # outputBlockSize: ""
-    maxBatchTimeMs: 750
-    # queuedMaxMessagesKbytes: ""
-    # queuedMinMessages: ""
-    # noStrictOffsetReset: false
-    # volumeMounts:
-    #   - mountPath: /dev/shm
-    #     name: dshm
-    # volumes:
-    #   - name: dshm
-    #     emptyDir:
-    #       medium: Memory
-
   eapItemsConsumer:
     enabled: true
     replicas: 1
@@ -1403,7 +1403,7 @@ snuba:
     # queuedMinMessages: ""
     # noStrictOffsetReset: false
 
-  subscriptionConsumerEapSpans:  # should have 1 partition and only 1 consumer replica: https://github.com/getsentry/snuba/issues/5855
+  subscriptionConsumerEapItems:  # should have 1 partition and only 1 consumer replica: https://github.com/getsentry/snuba/issues/5855
     enabled: true
     replicas: 1
     env: []
@@ -1425,6 +1425,90 @@ snuba:
     # noStrictOffsetReset: false
 
   subscriptionConsumerEvents:  # should have 1 partition and only 1 consumer replica: https://github.com/getsentry/snuba/issues/5855
+    enabled: true
+    replicas: 1
+    env: []
+    resources: {}
+    affinity: {}
+    nodeSelector: {}
+    securityContext: {}
+    topologySpreadConstraints: []
+    containerSecurityContext: {}
+    # tolerations: []
+    # podLabels: {}
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 5
+      periodSeconds: 320
+    # volumes: []
+    # volumeMounts: []
+    # autoOffsetReset: "earliest"
+    # noStrictOffsetReset: false
+
+  subscriptionConsumerGenericMetricsDistributions:  # should have 1 partition and only 1 consumer replica: https://github.com/getsentry/snuba/issues/5855
+    enabled: true
+    replicas: 1
+    env: []
+    resources: {}
+    affinity: {}
+    nodeSelector: {}
+    securityContext: {}
+    topologySpreadConstraints: []
+    containerSecurityContext: {}
+    # tolerations: []
+    # podLabels: {}
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 5
+      periodSeconds: 320
+    # volumes: []
+    # volumeMounts: []
+    # autoOffsetReset: "earliest"
+    # noStrictOffsetReset: false
+
+  subscriptionConsumerGenericMetricsSets:  # should have 1 partition and only 1 consumer replica: https://github.com/getsentry/snuba/issues/5855
+    enabled: true
+    replicas: 1
+    env: []
+    resources: {}
+    affinity: {}
+    nodeSelector: {}
+    securityContext: {}
+    topologySpreadConstraints: []
+    containerSecurityContext: {}
+    # tolerations: []
+    # podLabels: {}
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 5
+      periodSeconds: 320
+    # volumes: []
+    # volumeMounts: []
+    # autoOffsetReset: "earliest"
+    # noStrictOffsetReset: false
+
+  subscriptionConsumerGenericMetricsCounters:  # should have 1 partition and only 1 consumer replica: https://github.com/getsentry/snuba/issues/5855
+    enabled: true
+    replicas: 1
+    env: []
+    resources: {}
+    affinity: {}
+    nodeSelector: {}
+    securityContext: {}
+    topologySpreadConstraints: []
+    containerSecurityContext: {}
+    # tolerations: []
+    # podLabels: {}
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 5
+      periodSeconds: 320
+    # volumes: []
+    # volumeMounts: []
+    # autoOffsetReset: "earliest"
+    # noStrictOffsetReset: false
+
+  subscriptionConsumerGenericMetricsGauges:  # should have 1 partition and only 1 consumer replica: https://github.com/getsentry/snuba/issues/5855
     enabled: true
     replicas: 1
     env: []
@@ -1671,7 +1755,7 @@ snuba:
     #     emptyDir:
     #       medium: Memory
 
-  uptimeConsumer:
+  uptimeResultsConsumer:
     enabled: true
     replicas: 1
     env: []
@@ -2153,6 +2237,8 @@ openai: {}
 
 nginx:
   enabled: true  # true, if Safari compatibility is needed
+  image:
+    repository: bitnamilegacy/nginx
   containerPort: 8080
   existingServerBlockConfigmap: '{{ template "sentry.fullname" . }}'
   resources: {}
@@ -2372,6 +2458,8 @@ externalClickhouse:
 # See https://github.com/bitnami/charts/tree/master/bitnami/zookeeper
 zookeeper:
   enabled: true
+  image:
+    repository: bitnamilegacy/zookeeper
   nameOverride: zookeeper-clickhouse
   replicaCount: 1
   nodeSelector: {}
@@ -2384,6 +2472,8 @@ zookeeper:
 # See https://github.com/bitnami/charts/tree/master/bitnami/kafka
 kafka:
   enabled: true
+  image:
+    repository: bitnamilegacy/kafka
   provisioning:
     ## Increasing the replicationFactor enhances data reliability during Kafka pod failures by replicating data across multiple brokers.
     # Note that existing topics will remain with replicationFactor: 1 when updated.
@@ -2419,7 +2509,6 @@ kafka:
         config:
           "message.timestamp.type": LogAppendTime
       - name: outcomes
-      - name: outcomes-raw
       - name: outcomes-dlq
       - name: outcomes-billing
       - name: outcomes-billing-dlq
@@ -2636,6 +2725,8 @@ sourcemaps:
 
 redis:
   enabled: true
+  image:
+    repository: bitnamilegacy/redis
   replica:
     replicaCount: 1
     nodeSelector: {}
@@ -2678,6 +2769,8 @@ externalRedis:
 
 postgresql:
   enabled: true
+  image:
+    repository: bitnamilegacy/postgresql
   nameOverride: sentry-postgresql
   auth:
     database: sentry
@@ -2729,6 +2822,8 @@ externalPostgresql:
 rabbitmq:
   ## If disabled, Redis will be used instead as the broker.
   enabled: true
+  image:
+    repository: bitnamilegacy/rabbitmq
   vhost: /
   clustering:
     forceBoot: true
@@ -2802,6 +2897,8 @@ rabbitmq:
         release: "prometheus-operator"  # helm release of kube-prometheus-stack
 
 memcached:
+  image:
+    repository: bitnamilegacy/memcached
   memoryLimit: "2048"
   maxItemSize: "26214400"
   args:

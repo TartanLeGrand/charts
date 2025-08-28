@@ -1,8 +1,9 @@
+{{- if has "feature-complete" .Values.profiles }}
 {{- if .Values.sentry.uptimeResults.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "sentry.fullname" . }}-uptime-results-consumer
+  name: {{ template "sentry.fullname" . }}-uptime-results
   labels:
     app: sentry
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
@@ -23,7 +24,7 @@ spec:
     matchLabels:
         app: sentry
         release: "{{ .Release.Name }}"
-        role: sentry-subscription-consumer-eap-spans
+        role: sentry-uptime-results
   replicas: {{ .Values.sentry.uptimeResults.replicas }}
   template:
     metadata:
@@ -37,7 +38,7 @@ spec:
       labels:
         app: sentry
         release: "{{ .Release.Name }}"
-        role: sentry-subscription-consumer-eap-spans
+        role: sentry-uptime-results
         {{- if .Values.sentry.uptimeResults.podLabels }}
 {{ toYaml .Values.sentry.uptimeResults.podLabels | indent 8 }}
         {{- end }}
@@ -68,18 +69,27 @@ spec:
       imagePullSecrets:
 {{ toYaml .Values.images.sentry.imagePullSecrets | indent 8 }}
       {{- end }}
+      {{- if .Values.dnsPolicy }}
+      dnsPolicy: {{ .Values.dnsPolicy | quote }}
+      {{- end }}
+      {{- if .Values.dnsConfig }}
+      dnsConfig:
+{{ toYaml .Values.dnsConfig | indent 8 }}
+      {{- end }}
       {{- if .Values.sentry.uptimeResults.securityContext }}
       securityContext:
 {{ toYaml .Values.sentry.uptimeResults.securityContext | indent 8 }}
       {{- end }}
       containers:
-      - name: {{ .Chart.Name }}-subscription-consumer-eap-spans
+      - name: {{ .Chart.Name }}-uptime-results
         image: "{{ template "sentry.image" . }}"
         imagePullPolicy: {{ default "IfNotPresent" .Values.images.sentry.pullPolicy }}
         command: ["sentry"]
         args:
           - "run"
           - "consumer"
+          - "uptime-results"
+          - "--consumer-group"
           - "uptime-results"
           {{- if .Values.sentry.uptimeResults.autoOffsetReset }}
           - "--auto-offset-reset"
@@ -88,8 +98,6 @@ spec:
           {{- if .Values.sentry.uptimeResults.noStrictOffsetReset }}
           - "--no-strict-offset-reset"
           {{- end }}
-          - "--consumer-group"
-          - "uptime-results"
           {{- if .Values.sentry.uptimeResults.livenessProbe.enabled }}
           - "--healthcheck-file-path"
           - "/tmp/health.txt"
@@ -166,4 +174,5 @@ spec:
       {{- if .Values.sentry.uptimeResults.priorityClassName }}
       priorityClassName: "{{ .Values.sentry.uptimeResults.priorityClassName }}"
       {{- end }}
+{{- end }}
 {{- end }}
