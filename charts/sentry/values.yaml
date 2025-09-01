@@ -1141,6 +1141,10 @@ sentry:
     serviceAccount: {}
     
     # Database cleanup cronjob for nodestore_node table
+    # This runs direct SQL operations on the PostgreSQL database:
+    # DELETE FROM public.nodestore_node WHERE "timestamp" < NOW() - INTERVAL 'X days';
+    # VACUUM FULL public.nodestore_node;
+    # Uses the same retention period as sentry.cleanup.days
     dbCleanup:
       enabled: false
       schedule: "0 1 * * *"  # Run at 1 AM daily, after main cleanup

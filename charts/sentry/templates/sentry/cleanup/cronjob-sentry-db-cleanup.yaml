@@ -76,7 +76,7 @@ spec:
                 # Delete old records from nodestore_node table
                 psql -h "${POSTGRES_HOST}" -p "${POSTGRES_PORT}" -U "${POSTGRES_USER}" -d "${POSTGRES_NAME}" -c "
                   DELETE FROM public.nodestore_node 
-                  WHERE timestamp < NOW() - INTERVAL '{{ .Values.sentry.cleanup.days }} days';
+                  WHERE \"timestamp\" < NOW() - INTERVAL '{{ .Values.sentry.cleanup.days }} days';
                 "
                 
                 if [ $? -eq 0 ]; then
