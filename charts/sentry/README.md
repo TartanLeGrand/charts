@@ -864,6 +864,13 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.api.sidecars | list | `[]` |  |
 | snuba.api.topologySpreadConstraints | list | `[]` |  |
 | snuba.api.volumes | list | `[]` |  |
+| snuba.cleanup.activeDeadlineSeconds | int | `300` |  |
+| snuba.cleanup.concurrencyPolicy | string | `"Forbid"` |  |
+| snuba.cleanup.enabled | bool | `false` |  |
+| snuba.cleanup.failedJobsHistoryLimit | int | `5` |  |
+| snuba.cleanup.retentionDays | int | `30` |  |
+| snuba.cleanup.schedule | string | `"0 2 * * *"` |  |
+| snuba.cleanup.successfulJobsHistoryLimit | int | `5` |  |
 | snuba.clickhouse.maxConnections | int | `100` |  |
 | snuba.consumer.affinity | object | `{}` |  |
 | snuba.consumer.containerSecurityContext | object | `{}` |  |

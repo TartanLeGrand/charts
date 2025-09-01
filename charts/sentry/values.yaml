@@ -2037,14 +2037,29 @@ symbolicator:
     # volumeMounts: []
     # sidecars: []
 
-  # TODO The cleanup cronjob is not yet implemented
+  # ClickHouse database cleanup configuration
   cleanup:
     enabled: false
+    # Retention period in days for ClickHouse data cleanup
+    retentionDays: 30
+    # Cron schedule for cleanup job (daily at 2 AM by default)
+    schedule: "0 2 * * *"
+    successfulJobsHistoryLimit: 5
+    failedJobsHistoryLimit: 5
+    activeDeadlineSeconds: 300
+    concurrencyPolicy: Forbid
+    resources: {}
     # podLabels: {}
     # affinity: {}
+    # nodeSelector: {}
+    # tolerations: []
     # env: []
     # volumes: []
     # sidecars: []
+    # containerSecurityContext: {}
+    # securityContext: {}
+    # annotations: {}
+    # volumeMounts: []
 
 auth:
   register: true
