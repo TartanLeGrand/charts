@@ -77,44 +77,122 @@ spec:
               - |
                 set -e
                 echo "Starting ClickHouse cleanup with retention period of {{ .Values.snuba.cleanup.retentionDays }} days"
-                
-                # Define tables to cleanup based on snuba storage_sets
-                TABLES=(
-                  "discover_local"
-                  "events_local" 
-                  "events_ro_local"
-                  "outcomes_raw_local"
-                  "querylog_local"
-                  "sessions_raw_local"
-                  "transactions_local"
-                  "profiles_raw_local"
-                  "functions_raw_local"
-                  "replays_local"
-                  "generic_metric_sets_raw_local"
-                  "generic_metric_distributions_raw_local" 
-                  "generic_metric_counters_raw_local"
-                  "spans_local"
-                  "group_attributes_raw_local"
-                  "generic_metric_gauges_raw_local"
-                  "profile_chunks_raw_local"
-                )
-                
                 echo "Connecting to ClickHouse at $CLICKHOUSE_HOST:$CLICKHOUSE_PORT"
                 
-                # Execute cleanup for each table
-                for table in "${TABLES[@]}"; do
-                  echo "Cleaning up table: $table"
-                  clickhouse-client \
+                # Function to discover tables
+                discover_tables() {
+                  echo "Auto-detecting tables in ClickHouse database..."
+                  
+                  # Get all tables from the database
+                  ALL_TABLES=$(clickhouse-client \
                     --host="$CLICKHOUSE_HOST" \
                     --port="$CLICKHOUSE_PORT" \
                     --user="$CLICKHOUSE_USER" \
                     --database="$CLICKHOUSE_DATABASE" \
                     --password="$CLICKHOUSE_PASSWORD" \
-                    --query="DELETE FROM $table WHERE timestamp < now() - INTERVAL {{ .Values.snuba.cleanup.retentionDays }} DAY" \
-                    || echo "Warning: Failed to cleanup table $table (table may not exist)"
+                    --query="SHOW TABLES" 2>/dev/null || echo "")
+                  
+                  if [ -z "$ALL_TABLES" ]; then
+                    echo "Warning: Could not retrieve table list, falling back to hardcoded list"
+                    return 1
+                  fi
+                  
+                  echo "Found tables: $ALL_TABLES"
+                  
+                  # Filter tables based on include/exclude patterns
+                  DISCOVERED_TABLES=()
+                  {{- range .Values.snuba.cleanup.tables.includePatterns }}
+                  INCLUDE_PATTERN="{{ . }}"
+                  {{- end }}
+                  {{- range .Values.snuba.cleanup.tables.excludePatterns }}
+                  EXCLUDE_PATTERN="{{ . }}"
+                  {{- end }}
+                  
+                  for table in $ALL_TABLES; do
+                    # Check include patterns
+                    INCLUDE_MATCH=false
+                    {{- range .Values.snuba.cleanup.tables.includePatterns }}
+                    if echo "$table" | grep -E "{{ . }}" >/dev/null 2>&1; then
+                      INCLUDE_MATCH=true
+                    fi
+                    {{- end }}
+                    
+                    # Check exclude patterns
+                    EXCLUDE_MATCH=false
+                    {{- range .Values.snuba.cleanup.tables.excludePatterns }}
+                    if echo "$table" | grep -E "{{ . }}" >/dev/null 2>&1; then
+                      EXCLUDE_MATCH=true
+                    fi
+                    {{- end }}
+                    
+                    # Add to discovered tables if it matches include and doesn't match exclude
+                    if [ "$INCLUDE_MATCH" = true ] && [ "$EXCLUDE_MATCH" = false ]; then
+                      DISCOVERED_TABLES+=("$table")
+                      echo "Including table: $table"
+                    else
+                      echo "Excluding table: $table (include=$INCLUDE_MATCH, exclude=$EXCLUDE_MATCH)"
+                    fi
+                  done
+                  
+                  if [ ${#DISCOVERED_TABLES[@]} -eq 0 ]; then
+                    echo "Warning: No tables matched the include/exclude patterns, falling back to hardcoded list"
+                    return 1
+                  fi
+                  
+                  # Export discovered tables for cleanup
+                  printf '%s\n' "${DISCOVERED_TABLES[@]}"
+                  return 0
+                }
+                
+                # Determine which tables to clean up
+                {{- if .Values.snuba.cleanup.tables.autoDetect }}
+                echo "Table auto-detection enabled"
+                if TABLES_TO_CLEANUP=$(discover_tables); then
+                  readarray -t TABLES <<< "$TABLES_TO_CLEANUP"
+                  echo "Using auto-detected tables: ${TABLES[*]}"
+                else
+                  echo "Auto-detection failed, using fallback list"
+                  TABLES=(
+                    {{- range .Values.snuba.cleanup.tables.fallbackList }}
+                    "{{ . }}"
+                    {{- end }}
+                  )
+                fi
+                {{- else }}
+                echo "Table auto-detection disabled, using configured fallback list"
+                TABLES=(
+                  {{- range .Values.snuba.cleanup.tables.fallbackList }}
+                  "{{ . }}"
+                  {{- end }}
+                )
+                {{- end }}
+                
+                echo "Tables to cleanup: ${TABLES[*]}"
+                
+                # Execute cleanup for each table
+                CLEANED_COUNT=0
+                FAILED_COUNT=0
+                
+                for table in "${TABLES[@]}"; do
+                  if [ -n "$table" ]; then
+                    echo "Cleaning up table: $table"
+                    if clickhouse-client \
+                      --host="$CLICKHOUSE_HOST" \
+                      --port="$CLICKHOUSE_PORT" \
+                      --user="$CLICKHOUSE_USER" \
+                      --database="$CLICKHOUSE_DATABASE" \
+                      --password="$CLICKHOUSE_PASSWORD" \
+                      --query="DELETE FROM $table WHERE timestamp < now() - INTERVAL {{ .Values.snuba.cleanup.retentionDays }} DAY"; then
+                      echo "Successfully cleaned up table: $table"
+                      CLEANED_COUNT=$((CLEANED_COUNT + 1))
+                    else
+                      echo "Warning: Failed to cleanup table $table (table may not exist or have timestamp column)"
+                      FAILED_COUNT=$((FAILED_COUNT + 1))
+                    fi
+                  fi
                 done
                 
-                echo "ClickHouse cleanup completed"
+                echo "ClickHouse cleanup completed: $CLEANED_COUNT tables cleaned, $FAILED_COUNT failed"
             env:
             - name: CLICKHOUSE_HOST
               value: {{ include "sentry.clickhouse.host" . | quote }}

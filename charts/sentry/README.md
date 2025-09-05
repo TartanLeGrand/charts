@@ -1,33 +1,35 @@
-# Install
+# sentry
 
-## Add repo
+![Version: 27.1.1](https://img.shields.io/badge/Version-27.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 25.7.0](https://img.shields.io/badge/AppVersion-25.7.0-informational?style=flat-square)
 
-```
-helm repo add sentry https://sentry-kubernetes.github.io/charts
-```
+A Helm chart for Kubernetes
 
-## Without overrides
+**Homepage:** <https://github.com/sentry-kubernetes/charts>
 
-```
-helm install sentry sentry/sentry --wait --timeout=1000s
-```
+## Maintainers
 
-## With your own values file
+| Name | Email | Url |
+| ---- | ------ | --- |
+| sentry-kubernetes |  |  |
 
-```
-helm install sentry sentry/sentry -f values.yaml --wait --timeout=1000s
-```
+## Source Code
 
-# Upgrade
+* <https://github.com/sentry-kubernetes/charts/tree/develop/charts/sentry>
 
-Read the upgrade guide before upgrading to major versions of the chart.
-[Upgrade Guide](docs/UPGRADE.md)
+## Requirements
 
-## Configuration
+| Repository | Name | Version |
+|------------|------|---------|
+| https://sentry-kubernetes.github.io/charts | clickhouse | 4.0.1 |
+| oci://registry-1.docker.io/bitnamicharts | kafka | 29.3.14 |
+| oci://registry-1.docker.io/bitnamicharts | memcached | 7.5.2 |
+| oci://registry-1.docker.io/bitnamicharts | nginx | 18.2.5 |
+| oci://registry-1.docker.io/bitnamicharts | postgresql | 12.5.1 |
+| oci://registry-1.docker.io/bitnamicharts | rabbitmq(rabbitmq) | 11.16.2 |
+| oci://registry-1.docker.io/bitnamicharts | redis | 17.11.3 |
+| oci://registry-1.docker.io/bitnamicharts | zookeeper | 11.4.11 |
 
-The following table lists the configurable parameters of the Sentry chart and their default values.
-
-Note: this table is incomplete, so have a look at the values.yaml in case you miss something
+## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -56,10 +58,22 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | config.relay | string | `"# No YAML relay config given\n"` |  |
 | config.sentryConfPy | string | `"# No Python Extension Config Given\n"` |  |
 | config.snubaSettingsPy | string | `"# No Python Extension Config Given\n"` |  |
+| config.web.bufferSize | int | `32768` |  |
+| config.web.disableLogging | bool | `true` |  |
+| config.web.disableWriteException | bool | `true` |  |
+| config.web.httpChunkedInput | bool | `true` |  |
 | config.web.httpKeepalive | int | `15` |  |
+| config.web.ignoreSignpipe | bool | `true` |  |
+| config.web.ignoreWriteErrors | bool | `true` |  |
+| config.web.limitPost | int | `209715200` |  |
+| config.web.logXForwardedFor | bool | `false` |  |
 | config.web.maxRequests | int | `100000` |  |
 | config.web.maxRequestsDelta | int | `500` |  |
 | config.web.maxWorkerLifetime | int | `86400` |  |
+| config.web.memoryReport | bool | `false` |  |
+| config.web.reloadOnRss | int | `600` |  |
+| config.web.thunderLock | bool | `true` |  |
+| config.web.workers | int | `3` |  |
 | discord | object | `{}` |  |
 | externalClickhouse.database | string | `"default"` |  |
 | externalClickhouse.host | string | `"clickhouse"` |  |
@@ -68,15 +82,13 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | externalClickhouse.singleNode | bool | `true` |  |
 | externalClickhouse.tcpPort | int | `9000` |  |
 | externalClickhouse.username | string | `"default"` |  |
-| externalKafka.cluster | list | `[]` | Multi hosts and ports of external Kafka |
-| externalKafka.host | string | `"kafka-confluent"` | Hostname or IP address of external Kafka |
-| externalKafka.port | int | `9092` | Port for external Kafka |
-| externalKafka.compression.type | string | `""` | Compression type for Kafka messages ('gzip', 'snappy', 'lz4', 'zstd') |
-| externalKafka.message.max.bytes | int | `50000000` | Maximum message size for Kafka |
-| externalKafka.sasl.mechanism | string | `"None"` | SASL mechanism for Kafka (PLAIN, SCRAM-256, SCRAM-512) |
-| externalKafka.sasl.username | string | `"None"` | SASL username for Kafka |
-| externalKafka.sasl.password | string | `"None"` | SASL password for Kafka |
-| externalKafka.security.protocol | string | `"plaintext"` | Security protocol for Kafka (PLAINTEXT, SASL_PLAINTEXT, SASL_SSL, SSL) |
+| externalKafka.compression.type | string | `nil` |  |
+| externalKafka.message.max.bytes | int | `50000000` |  |
+| externalKafka.sasl.mechanism | string | `"None"` |  |
+| externalKafka.sasl.password | string | `"None"` |  |
+| externalKafka.sasl.username | string | `"None"` |  |
+| externalKafka.security.protocol | string | `"plaintext"` |  |
+| externalKafka.socket.timeout.ms | int | `1000` |  |
 | externalPostgresql.connMaxAge | int | `0` |  |
 | externalPostgresql.database | string | `"sentry"` |  |
 | externalPostgresql.existingSecretKeys | object | `{}` |  |
@@ -123,7 +135,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | hooks.dbInit.env | list | `[]` |  |
 | hooks.dbInit.nodeSelector | object | `{}` |  |
 | hooks.dbInit.podAnnotations | object | `{}` |  |
-| hooks.dbInit.resources.limits.memory | string | `"2048Mi"` |  |
+| hooks.dbInit.resources.limits.memory | string | `"2560Mi"` |  |
 | hooks.dbInit.resources.requests.cpu | string | `"300m"` |  |
 | hooks.dbInit.resources.requests.memory | string | `"2048Mi"` |  |
 | hooks.dbInit.sidecars | list | `[]` |  |
@@ -154,37 +166,43 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | kafka.controller.nodeSelector | object | `{}` |  |
 | kafka.controller.replicaCount | int | `3` |  |
 | kafka.enabled | bool | `true` |  |
+| kafka.image.repository | string | `"bitnamilegacy/kafka"` |  |
 | kafka.kraft.enabled | bool | `true` |  |
-| kafka.listeners.client.protocol | string | `"PLAINTEXT"` | Security protocol for the Kafka client listener (PLAINTEXT, SASL_PLAINTEXT, SASL_SSL, SSL) |
+| kafka.listeners.client.protocol | string | `"PLAINTEXT"` |  |
 | kafka.listeners.controller.protocol | string | `"PLAINTEXT"` |  |
 | kafka.listeners.external.protocol | string | `"PLAINTEXT"` |  |
 | kafka.listeners.interbroker.protocol | string | `"PLAINTEXT"` |  |
 | kafka.provisioning.enabled | bool | `true` |  |
+| kafka.provisioning.replicationFactor | int | `3` |  |
 | kafka.provisioning.topics[0].config."message.timestamp.type" | string | `"LogAppendTime"` |  |
 | kafka.provisioning.topics[0].name | string | `"events"` |  |
+| kafka.provisioning.topics[100].name | string | `"taskworker-symbolication"` |  |
+| kafka.provisioning.topics[101].name | string | `"taskworker-symbolication-dlq"` |  |
+| kafka.provisioning.topics[102].name | string | `"taskworker-usage"` |  |
+| kafka.provisioning.topics[103].name | string | `"taskworker-usage-dlq"` |  |
 | kafka.provisioning.topics[10].name | string | `"outcomes-billing-dlq"` |  |
-| kafka.provisioning.topics[11].name | string | `"ingest-sessions"` |  |
-| kafka.provisioning.topics[12].config."cleanup.policy" | string | `"compact,delete"` |  |
-| kafka.provisioning.topics[12].config."min.compaction.lag.ms" | string | `"3600000"` |  |
-| kafka.provisioning.topics[12].name | string | `"snuba-metrics-commit-log"` |  |
-| kafka.provisioning.topics[13].name | string | `"scheduled-subscriptions-events"` |  |
-| kafka.provisioning.topics[14].name | string | `"scheduled-subscriptions-transactions"` |  |
-| kafka.provisioning.topics[15].name | string | `"scheduled-subscriptions-metrics"` |  |
-| kafka.provisioning.topics[16].name | string | `"scheduled-subscriptions-generic-metrics-sets"` |  |
-| kafka.provisioning.topics[17].name | string | `"scheduled-subscriptions-generic-metrics-distributions"` |  |
-| kafka.provisioning.topics[18].name | string | `"scheduled-subscriptions-generic-metrics-counters"` |  |
-| kafka.provisioning.topics[19].name | string | `"scheduled-subscriptions-generic-metrics-gauges"` |  |
+| kafka.provisioning.topics[11].name | string | `"ingest-spans"` |  |
+| kafka.provisioning.topics[12].name | string | `"ingest-sessions"` |  |
+| kafka.provisioning.topics[13].config."cleanup.policy" | string | `"compact,delete"` |  |
+| kafka.provisioning.topics[13].config."min.compaction.lag.ms" | string | `"3600000"` |  |
+| kafka.provisioning.topics[13].name | string | `"snuba-metrics-commit-log"` |  |
+| kafka.provisioning.topics[14].name | string | `"scheduled-subscriptions-events"` |  |
+| kafka.provisioning.topics[15].name | string | `"scheduled-subscriptions-transactions"` |  |
+| kafka.provisioning.topics[16].name | string | `"scheduled-subscriptions-metrics"` |  |
+| kafka.provisioning.topics[17].name | string | `"scheduled-subscriptions-generic-metrics-sets"` |  |
+| kafka.provisioning.topics[18].name | string | `"scheduled-subscriptions-generic-metrics-distributions"` |  |
+| kafka.provisioning.topics[19].name | string | `"scheduled-subscriptions-generic-metrics-counters"` |  |
 | kafka.provisioning.topics[1].name | string | `"event-replacements"` |  |
-| kafka.provisioning.topics[20].name | string | `"events-subscription-results"` |  |
-| kafka.provisioning.topics[21].name | string | `"transactions-subscription-results"` |  |
-| kafka.provisioning.topics[22].name | string | `"metrics-subscription-results"` |  |
-| kafka.provisioning.topics[23].name | string | `"generic-metrics-subscription-results"` |  |
-| kafka.provisioning.topics[24].config."message.timestamp.type" | string | `"LogAppendTime"` |  |
-| kafka.provisioning.topics[24].name | string | `"snuba-queries"` |  |
+| kafka.provisioning.topics[20].name | string | `"scheduled-subscriptions-generic-metrics-gauges"` |  |
+| kafka.provisioning.topics[21].name | string | `"events-subscription-results"` |  |
+| kafka.provisioning.topics[22].name | string | `"transactions-subscription-results"` |  |
+| kafka.provisioning.topics[23].name | string | `"metrics-subscription-results"` |  |
+| kafka.provisioning.topics[24].name | string | `"generic-metrics-subscription-results"` |  |
 | kafka.provisioning.topics[25].config."message.timestamp.type" | string | `"LogAppendTime"` |  |
-| kafka.provisioning.topics[25].name | string | `"processed-profiles"` |  |
-| kafka.provisioning.topics[26].name | string | `"profiles-call-tree"` |  |
-| kafka.provisioning.topics[27].name | string | `"snuba-profile-chunks"` |  |
+| kafka.provisioning.topics[25].name | string | `"snuba-queries"` |  |
+| kafka.provisioning.topics[26].config."message.timestamp.type" | string | `"LogAppendTime"` |  |
+| kafka.provisioning.topics[26].name | string | `"processed-profiles"` |  |
+| kafka.provisioning.topics[27].name | string | `"profiles-call-tree"` |  |
 | kafka.provisioning.topics[28].config."max.message.bytes" | string | `"15000000"` |  |
 | kafka.provisioning.topics[28].config."message.timestamp.type" | string | `"LogAppendTime"` |  |
 | kafka.provisioning.topics[28].name | string | `"ingest-replay-events"` |  |
@@ -223,46 +241,69 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | kafka.provisioning.topics[44].name | string | `"ingest-attachments-dlq"` |  |
 | kafka.provisioning.topics[45].name | string | `"ingest-transactions"` |  |
 | kafka.provisioning.topics[46].name | string | `"ingest-transactions-dlq"` |  |
-| kafka.provisioning.topics[47].name | string | `"ingest-events-dlq"` |  |
-| kafka.provisioning.topics[48].name | string | `"ingest-events"` |  |
-| kafka.provisioning.topics[49].name | string | `"ingest-replay-recordings"` |  |
+| kafka.provisioning.topics[47].name | string | `"ingest-transactions-backlog"` |  |
+| kafka.provisioning.topics[48].name | string | `"ingest-events-dlq"` |  |
+| kafka.provisioning.topics[49].name | string | `"ingest-events"` |  |
 | kafka.provisioning.topics[4].config."message.timestamp.type" | string | `"LogAppendTime"` |  |
 | kafka.provisioning.topics[4].name | string | `"transactions"` |  |
-| kafka.provisioning.topics[50].name | string | `"ingest-metrics"` |  |
-| kafka.provisioning.topics[51].name | string | `"ingest-metrics-dlq"` |  |
-| kafka.provisioning.topics[52].name | string | `"ingest-performance-metrics"` |  |
-| kafka.provisioning.topics[53].name | string | `"ingest-feedback-events"` |  |
-| kafka.provisioning.topics[54].name | string | `"ingest-feedback-events-dlq"` |  |
-| kafka.provisioning.topics[55].name | string | `"ingest-monitors"` |  |
-| kafka.provisioning.topics[56].name | string | `"monitors-clock-tasks"` |  |
-| kafka.provisioning.topics[57].name | string | `"monitors-clock-tick"` |  |
-| kafka.provisioning.topics[58].name | string | `"monitors-incident-occurrences"` |  |
-| kafka.provisioning.topics[59].name | string | `"profiles"` |  |
+| kafka.provisioning.topics[50].name | string | `"ingest-replay-recordings"` |  |
+| kafka.provisioning.topics[51].name | string | `"ingest-metrics"` |  |
+| kafka.provisioning.topics[52].name | string | `"ingest-metrics-dlq"` |  |
+| kafka.provisioning.topics[53].name | string | `"ingest-performance-metrics"` |  |
+| kafka.provisioning.topics[54].name | string | `"ingest-feedback-events"` |  |
+| kafka.provisioning.topics[55].name | string | `"ingest-feedback-events-dlq"` |  |
+| kafka.provisioning.topics[56].name | string | `"ingest-monitors"` |  |
+| kafka.provisioning.topics[57].name | string | `"monitors-clock-tasks"` |  |
+| kafka.provisioning.topics[58].name | string | `"monitors-clock-tick"` |  |
+| kafka.provisioning.topics[59].name | string | `"monitors-incident-occurrences"` |  |
 | kafka.provisioning.topics[5].config."cleanup.policy" | string | `"compact,delete"` |  |
 | kafka.provisioning.topics[5].config."min.compaction.lag.ms" | string | `"3600000"` |  |
 | kafka.provisioning.topics[5].name | string | `"snuba-transactions-commit-log"` |  |
-| kafka.provisioning.topics[60].name | string | `"ingest-occurrences"` |  |
-| kafka.provisioning.topics[61].name | string | `"snuba-spans"` |  |
-| kafka.provisioning.topics[62].name | string | `"snuba-eap-spans-commit-log"` |  |
-| kafka.provisioning.topics[63].name | string | `"scheduled-subscriptions-eap-spans"` |  |
-| kafka.provisioning.topics[64].name | string | `"eap-spans-subscription-results"` |  |
-| kafka.provisioning.topics[65].name | string | `"snuba-eap-mutations"` |  |
-| kafka.provisioning.topics[66].name | string | `"snuba-lw-deletions-generic-events"` |  |
-| kafka.provisioning.topics[67].name | string | `"shared-resources-usage"` |  |
-| kafka.provisioning.topics[68].name | string | `"snuba-profile-chunks"` |  |
-| kafka.provisioning.topics[69].name | string | `"buffered-segments"` |  |
+| kafka.provisioning.topics[60].name | string | `"profiles"` |  |
+| kafka.provisioning.topics[61].name | string | `"ingest-occurrences"` |  |
+| kafka.provisioning.topics[62].name | string | `"snuba-spans"` |  |
+| kafka.provisioning.topics[63].name | string | `"snuba-eap-spans-commit-log"` |  |
+| kafka.provisioning.topics[64].name | string | `"scheduled-subscriptions-eap-spans"` |  |
+| kafka.provisioning.topics[65].name | string | `"eap-spans-subscription-results"` |  |
+| kafka.provisioning.topics[66].name | string | `"snuba-eap-mutations"` |  |
+| kafka.provisioning.topics[67].name | string | `"snuba-lw-deletions-generic-events"` |  |
+| kafka.provisioning.topics[68].name | string | `"shared-resources-usage"` |  |
+| kafka.provisioning.topics[69].name | string | `"snuba-profile-chunks"` |  |
 | kafka.provisioning.topics[6].config."message.timestamp.type" | string | `"LogAppendTime"` |  |
 | kafka.provisioning.topics[6].name | string | `"snuba-metrics"` |  |
-| kafka.provisioning.topics[70].name | string | `"buffered-segments-dlq"` |  |
-| kafka.provisioning.topics[71].name | string | `"uptime-configs"` |  |
-| kafka.provisioning.topics[72].name | string | `"uptime-results"` |  |
-| kafka.provisioning.topics[73].name | string | `"task-worker"` |  |
+| kafka.provisioning.topics[70].name | string | `"buffered-segments"` |  |
+| kafka.provisioning.topics[71].name | string | `"buffered-segments-dlq"` |  |
+| kafka.provisioning.topics[72].name | string | `"uptime-configs"` |  |
+| kafka.provisioning.topics[73].name | string | `"uptime-results"` |  |
+| kafka.provisioning.topics[74].name | string | `"snuba-uptime-results"` |  |
+| kafka.provisioning.topics[75].name | string | `"task-worker"` |  |
+| kafka.provisioning.topics[76].name | string | `"snuba-ourlogs"` |  |
+| kafka.provisioning.topics[77].name | string | `"snuba-items"` |  |
+| kafka.provisioning.topics[78].name | string | `"taskworker"` |  |
+| kafka.provisioning.topics[79].name | string | `"taskworker-dlq"` |  |
 | kafka.provisioning.topics[7].name | string | `"outcomes"` |  |
+| kafka.provisioning.topics[80].name | string | `"taskworker-billing"` |  |
+| kafka.provisioning.topics[81].name | string | `"taskworker-billing-dlq"` |  |
+| kafka.provisioning.topics[82].name | string | `"taskworker-control"` |  |
+| kafka.provisioning.topics[83].name | string | `"taskworker-control-dlq"` |  |
+| kafka.provisioning.topics[84].name | string | `"taskworker-ingest"` |  |
+| kafka.provisioning.topics[85].name | string | `"taskworker-ingest-dlq"` |  |
+| kafka.provisioning.topics[86].name | string | `"taskworker-ingest-errors"` |  |
+| kafka.provisioning.topics[87].name | string | `"taskworker-ingest-errors-dlq"` |  |
+| kafka.provisioning.topics[88].name | string | `"taskworker-ingest-transactions"` |  |
+| kafka.provisioning.topics[89].name | string | `"taskworker-ingest-transactions-dlq"` |  |
 | kafka.provisioning.topics[8].name | string | `"outcomes-dlq"` |  |
+| kafka.provisioning.topics[90].name | string | `"taskworker-internal"` |  |
+| kafka.provisioning.topics[91].name | string | `"taskworker-internal-dlq"` |  |
+| kafka.provisioning.topics[92].name | string | `"taskworker-limited"` |  |
+| kafka.provisioning.topics[93].name | string | `"taskworker-limited-dlq"` |  |
+| kafka.provisioning.topics[94].name | string | `"taskworker-long"` |  |
+| kafka.provisioning.topics[95].name | string | `"taskworker-long-dlq"` |  |
+| kafka.provisioning.topics[96].name | string | `"taskworker-products"` |  |
+| kafka.provisioning.topics[97].name | string | `"taskworker-products-dlq"` |  |
+| kafka.provisioning.topics[98].name | string | `"taskworker-sentryapp"` |  |
+| kafka.provisioning.topics[99].name | string | `"taskworker-sentryapp-dlq"` |  |
 | kafka.provisioning.topics[9].name | string | `"outcomes-billing"` |  |
-| kafka.sasl.client.users | list | `[]` | List of usernames for client communications when SASL is enabled, first user will be used if enabled |
-| kafka.sasl.client.passwords | list | `[]` | List of passwords for client communications when SASL is enabled, must match the number of client.users, first password will be used if enabled |
-| kafka.sasl.enabledMechanisms | string | `"PLAIN,SCRAM-SHA-256,SCRAM-SHA-512"` | Comma-separated list of allowed SASL mechanisms when SASL listeners are configured |
 | kafka.zookeeper.enabled | bool | `false` |  |
 | mail.backend | string | `"dummy"` |  |
 | mail.from | string | `""` |  |
@@ -279,12 +320,14 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | memcached.args[4] | string | `"-m $(MEMCACHED_MEMORY_LIMIT)"` |  |
 | memcached.args[5] | string | `"-I $(MEMCACHED_MAX_ITEM_SIZE)"` |  |
 | memcached.extraEnvVarsCM | string | `"sentry-memcached"` |  |
+| memcached.image.repository | string | `"bitnamilegacy/memcached"` |  |
 | memcached.maxItemSize | string | `"26214400"` |  |
 | memcached.memoryLimit | string | `"2048"` |  |
 | memcached.nodeSelector | object | `{}` |  |
 | metrics.affinity | object | `{}` |  |
 | metrics.containerSecurityContext | object | `{}` |  |
 | metrics.enabled | bool | `false` |  |
+| metrics.image.imagePullSecrets | list | `[]` |  |
 | metrics.image.pullPolicy | string | `"IfNotPresent"` |  |
 | metrics.image.repository | string | `"prom/statsd-exporter"` |  |
 | metrics.image.tag | string | `"v0.17.0"` |  |
@@ -326,6 +369,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | nginx.enabled | bool | `true` |  |
 | nginx.existingServerBlockConfigmap | string | `"{{ template \"sentry.fullname\" . }}"` |  |
 | nginx.extraLocationSnippet | bool | `false` |  |
+| nginx.image.repository | string | `"bitnamilegacy/nginx"` |  |
 | nginx.metrics.serviceMonitor | object | `{}` |  |
 | nginx.nodeSelector | object | `{}` |  |
 | nginx.replicaCount | int | `1` |  |
@@ -362,6 +406,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | postgresql.auth.database | string | `"sentry"` |  |
 | postgresql.connMaxAge | int | `0` |  |
 | postgresql.enabled | bool | `true` |  |
+| postgresql.image.repository | string | `"bitnamilegacy/postgresql"` |  |
 | postgresql.nameOverride | string | `"sentry-postgresql"` |  |
 | postgresql.replication.applicationName | string | `"sentry"` |  |
 | postgresql.replication.enabled | bool | `false` |  |
@@ -369,6 +414,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | postgresql.replication.readReplicas | int | `2` |  |
 | postgresql.replication.synchronousCommit | string | `"on"` |  |
 | prefix | string | `nil` |  |
+| profiles[0] | string | `"feature-complete"` |  |
 | rabbitmq.auth.erlangCookie | string | `"pHgpy3Q6adTskzAT6bLHCFqFTF7lMxhA"` |  |
 | rabbitmq.auth.password | string | `"guest"` |  |
 | rabbitmq.auth.username | string | `"guest"` |  |
@@ -377,6 +423,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | rabbitmq.enabled | bool | `true` |  |
 | rabbitmq.extraConfiguration | string | `"load_definitions = /app/load_definition.json\n"` |  |
 | rabbitmq.extraSecrets.load-definition."load_definition.json" | string | `"{\n  \"users\": [\n    {\n      \"name\": \"{{ .Values.auth.username }}\",\n      \"password\": \"{{ .Values.auth.password }}\",\n      \"tags\": \"administrator\"\n    }\n  ],\n  \"permissions\": [{\n    \"user\": \"{{ .Values.auth.username }}\",\n    \"vhost\": \"/\",\n    \"configure\": \".*\",\n    \"write\": \".*\",\n    \"read\": \".*\"\n  }],\n  \"policies\": [\n    {\n      \"name\": \"ha-all\",\n      \"pattern\": \".*\",\n      \"vhost\": \"/\",\n      \"definition\": {\n        \"ha-mode\": \"all\",\n        \"ha-sync-mode\": \"automatic\",\n        \"ha-sync-batch-size\": 1\n      }\n    }\n  ],\n  \"vhosts\": [\n    {\n      \"name\": \"/\"\n    }\n  ]\n}\n"` |  |
+| rabbitmq.image.repository | string | `"bitnamilegacy/rabbitmq"` |  |
 | rabbitmq.loadDefinition.enabled | bool | `true` |  |
 | rabbitmq.loadDefinition.existingSecret | string | `"load-definition"` |  |
 | rabbitmq.memoryHighWatermark | object | `{}` |  |
@@ -393,6 +440,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | redis.auth.enabled | bool | `false` |  |
 | redis.auth.sentinel | bool | `false` |  |
 | redis.enabled | bool | `true` |  |
+| redis.image.repository | string | `"bitnamilegacy/redis"` |  |
 | redis.master.nodeSelector | object | `{}` |  |
 | redis.master.persistence.enabled | bool | `true` |  |
 | redis.nameOverride | string | `"sentry-redis"` |  |
@@ -632,9 +680,9 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.ingestReplayRecordings.sidecars | list | `[]` |  |
 | sentry.ingestReplayRecordings.topologySpreadConstraints | list | `[]` |  |
 | sentry.ingestReplayRecordings.volumes | list | `[]` |  |
-| sentry.kafka.compression.type | string | `""` | Compression type for Kafka messages |
-| sentry.kafka.message.max.bytes | int | `50000000` | Maximum message size for Kafka |
-| sentry.kafka.socket.timeout.ms | int | `1000` | Socket timeout for Kafka connections |
+| sentry.kafka.compression.type | string | `nil` |  |
+| sentry.kafka.message.max.bytes | int | `50000000` |  |
+| sentry.kafka.socket.timeout.ms | int | `1000` |  |
 | sentry.metricsConsumer.affinity | object | `{}` |  |
 | sentry.metricsConsumer.autoscaling.enabled | bool | `false` |  |
 | sentry.metricsConsumer.autoscaling.maxReplicas | int | `3` |  |
@@ -653,6 +701,36 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.metricsConsumer.sidecars | list | `[]` |  |
 | sentry.metricsConsumer.topologySpreadConstraints | list | `[]` |  |
 | sentry.metricsConsumer.volumes | list | `[]` |  |
+| sentry.monitorsClockTasks.affinity | object | `{}` |  |
+| sentry.monitorsClockTasks.autoscaling.enabled | bool | `false` |  |
+| sentry.monitorsClockTasks.containerSecurityContext | object | `{}` |  |
+| sentry.monitorsClockTasks.enabled | bool | `false` |  |
+| sentry.monitorsClockTasks.env | list | `[]` |  |
+| sentry.monitorsClockTasks.livenessProbe.enabled | bool | `true` |  |
+| sentry.monitorsClockTasks.livenessProbe.initialDelaySeconds | int | `5` |  |
+| sentry.monitorsClockTasks.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.monitorsClockTasks.nodeSelector | object | `{}` |  |
+| sentry.monitorsClockTasks.replicas | int | `1` |  |
+| sentry.monitorsClockTasks.resources | object | `{}` |  |
+| sentry.monitorsClockTasks.securityContext | object | `{}` |  |
+| sentry.monitorsClockTasks.sidecars | list | `[]` |  |
+| sentry.monitorsClockTasks.topologySpreadConstraints | list | `[]` |  |
+| sentry.monitorsClockTasks.volumes | list | `[]` |  |
+| sentry.monitorsClockTick.affinity | object | `{}` |  |
+| sentry.monitorsClockTick.autoscaling.enabled | bool | `false` |  |
+| sentry.monitorsClockTick.containerSecurityContext | object | `{}` |  |
+| sentry.monitorsClockTick.enabled | bool | `false` |  |
+| sentry.monitorsClockTick.env | list | `[]` |  |
+| sentry.monitorsClockTick.livenessProbe.enabled | bool | `true` |  |
+| sentry.monitorsClockTick.livenessProbe.initialDelaySeconds | int | `5` |  |
+| sentry.monitorsClockTick.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.monitorsClockTick.nodeSelector | object | `{}` |  |
+| sentry.monitorsClockTick.replicas | int | `1` |  |
+| sentry.monitorsClockTick.resources | object | `{}` |  |
+| sentry.monitorsClockTick.securityContext | object | `{}` |  |
+| sentry.monitorsClockTick.sidecars | list | `[]` |  |
+| sentry.monitorsClockTick.topologySpreadConstraints | list | `[]` |  |
+| sentry.monitorsClockTick.volumes | list | `[]` |  |
 | sentry.postProcessForwardErrors.affinity | object | `{}` |  |
 | sentry.postProcessForwardErrors.containerSecurityContext | object | `{}` |  |
 | sentry.postProcessForwardErrors.enabled | bool | `true` |  |
@@ -695,7 +773,47 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.postProcessForwardTransactions.sidecars | list | `[]` |  |
 | sentry.postProcessForwardTransactions.topologySpreadConstraints | list | `[]` |  |
 | sentry.postProcessForwardTransactions.volumes | list | `[]` |  |
+| sentry.processSegments.affinity | object | `{}` |  |
+| sentry.processSegments.containerSecurityContext | object | `{}` |  |
+| sentry.processSegments.enabled | bool | `true` |  |
+| sentry.processSegments.env | list | `[]` |  |
+| sentry.processSegments.livenessProbe.enabled | bool | `true` |  |
+| sentry.processSegments.livenessProbe.initialDelaySeconds | int | `5` |  |
+| sentry.processSegments.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.processSegments.nodeSelector | object | `{}` |  |
+| sentry.processSegments.replicas | int | `1` |  |
+| sentry.processSegments.resources | object | `{}` |  |
+| sentry.processSegments.securityContext | object | `{}` |  |
+| sentry.processSegments.sidecars | list | `[]` |  |
+| sentry.processSegments.topologySpreadConstraints | list | `[]` |  |
+| sentry.processSegments.volumes | list | `[]` |  |
+| sentry.processSpans.affinity | object | `{}` |  |
+| sentry.processSpans.containerSecurityContext | object | `{}` |  |
+| sentry.processSpans.enabled | bool | `true` |  |
+| sentry.processSpans.env | list | `[]` |  |
+| sentry.processSpans.livenessProbe.enabled | bool | `true` |  |
+| sentry.processSpans.livenessProbe.initialDelaySeconds | int | `5` |  |
+| sentry.processSpans.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.processSpans.nodeSelector | object | `{}` |  |
+| sentry.processSpans.replicas | int | `1` |  |
+| sentry.processSpans.resources | object | `{}` |  |
+| sentry.processSpans.securityContext | object | `{}` |  |
+| sentry.processSpans.sidecars | list | `[]` |  |
+| sentry.processSpans.topologySpreadConstraints | list | `[]` |  |
+| sentry.processSpans.volumes | list | `[]` |  |
 | sentry.singleOrganization | bool | `true` |  |
+| sentry.subscriptionConsumerEapSpans.affinity | object | `{}` |  |
+| sentry.subscriptionConsumerEapSpans.containerSecurityContext | object | `{}` |  |
+| sentry.subscriptionConsumerEapSpans.enabled | bool | `true` |  |
+| sentry.subscriptionConsumerEapSpans.env | list | `[]` |  |
+| sentry.subscriptionConsumerEapSpans.livenessProbe.enabled | bool | `true` |  |
+| sentry.subscriptionConsumerEapSpans.livenessProbe.initialDelaySeconds | int | `5` |  |
+| sentry.subscriptionConsumerEapSpans.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.subscriptionConsumerEapSpans.nodeSelector | object | `{}` |  |
+| sentry.subscriptionConsumerEapSpans.replicas | int | `1` |  |
+| sentry.subscriptionConsumerEapSpans.resources | object | `{}` |  |
+| sentry.subscriptionConsumerEapSpans.securityContext | object | `{}` |  |
+| sentry.subscriptionConsumerEapSpans.topologySpreadConstraints | list | `[]` |  |
 | sentry.subscriptionConsumerEvents.affinity | object | `{}` |  |
 | sentry.subscriptionConsumerEvents.containerSecurityContext | object | `{}` |  |
 | sentry.subscriptionConsumerEvents.enabled | bool | `true` |  |
@@ -738,6 +856,18 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.subscriptionConsumerMetrics.sidecars | list | `[]` |  |
 | sentry.subscriptionConsumerMetrics.topologySpreadConstraints | list | `[]` |  |
 | sentry.subscriptionConsumerMetrics.volumes | list | `[]` |  |
+| sentry.subscriptionConsumerResultsEapItems.affinity | object | `{}` |  |
+| sentry.subscriptionConsumerResultsEapItems.containerSecurityContext | object | `{}` |  |
+| sentry.subscriptionConsumerResultsEapItems.enabled | bool | `true` |  |
+| sentry.subscriptionConsumerResultsEapItems.env | list | `[]` |  |
+| sentry.subscriptionConsumerResultsEapItems.livenessProbe.enabled | bool | `true` |  |
+| sentry.subscriptionConsumerResultsEapItems.livenessProbe.initialDelaySeconds | int | `5` |  |
+| sentry.subscriptionConsumerResultsEapItems.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.subscriptionConsumerResultsEapItems.nodeSelector | object | `{}` |  |
+| sentry.subscriptionConsumerResultsEapItems.replicas | int | `1` |  |
+| sentry.subscriptionConsumerResultsEapItems.resources | object | `{}` |  |
+| sentry.subscriptionConsumerResultsEapItems.securityContext | object | `{}` |  |
+| sentry.subscriptionConsumerResultsEapItems.topologySpreadConstraints | list | `[]` |  |
 | sentry.subscriptionConsumerTransactions.affinity | object | `{}` |  |
 | sentry.subscriptionConsumerTransactions.containerSecurityContext | object | `{}` |  |
 | sentry.subscriptionConsumerTransactions.enabled | bool | `true` |  |
@@ -864,13 +994,18 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.api.sidecars | list | `[]` |  |
 | snuba.api.topologySpreadConstraints | list | `[]` |  |
 | snuba.api.volumes | list | `[]` |  |
-| snuba.cleanup.activeDeadlineSeconds | int | `300` |  |
-| snuba.cleanup.concurrencyPolicy | string | `"Forbid"` |  |
-| snuba.cleanup.enabled | bool | `false` |  |
-| snuba.cleanup.failedJobsHistoryLimit | int | `5` |  |
-| snuba.cleanup.retentionDays | int | `30` |  |
-| snuba.cleanup.schedule | string | `"0 2 * * *"` |  |
-| snuba.cleanup.successfulJobsHistoryLimit | int | `5` |  |
+| snuba.cleanup.activeDeadlineSeconds | int | `300` | Maximum time in seconds for cleanup job to run |
+| snuba.cleanup.concurrencyPolicy | string | `"Forbid"` | Concurrency policy for cleanup job |
+| snuba.cleanup.enabled | bool | `false` | Enable ClickHouse database cleanup cronjob |
+| snuba.cleanup.failedJobsHistoryLimit | int | `5` | Number of failed job executions to retain |
+| snuba.cleanup.resources | object | `{}` | Resource limits and requests for cleanup job |
+| snuba.cleanup.retentionDays | int | `30` | Retention period in days for ClickHouse data cleanup |
+| snuba.cleanup.schedule | string | `"0 2 * * *"` | Cron schedule for cleanup job (daily at 2 AM by default) |
+| snuba.cleanup.successfulJobsHistoryLimit | int | `5` | Number of successful job executions to retain |
+| snuba.cleanup.tables.autoDetect | bool | `true` | Auto-detect tables instead of using a hardcoded list |
+| snuba.cleanup.tables.excludePatterns | list | `["^system\\.","^information_schema\\.","^INFORMATION_SCHEMA\\."]` | Exclude patterns for table names (regex patterns) |
+| snuba.cleanup.tables.fallbackList | list | `["discover_local","events_local","events_ro_local","outcomes_raw_local","querylog_local","sessions_raw_local","transactions_local","profiles_raw_local","functions_raw_local","replays_local","generic_metric_sets_raw_local","generic_metric_distributions_raw_local","generic_metric_counters_raw_local","spans_local","group_attributes_raw_local","generic_metric_gauges_raw_local","profile_chunks_raw_local"]` | Fallback hardcoded table list (used if autoDetect fails or is disabled) |
+| snuba.cleanup.tables.includePatterns | list | `[".*_local$",".*_raw_local$"]` | Include patterns for table names (regex patterns) |
 | snuba.clickhouse.maxConnections | int | `100` |  |
 | snuba.consumer.affinity | object | `{}` |  |
 | snuba.consumer.containerSecurityContext | object | `{}` |  |
@@ -886,6 +1021,32 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.consumer.securityContext | object | `{}` |  |
 | snuba.consumer.topologySpreadConstraints | list | `[]` |  |
 | snuba.dbInitJob.env | list | `[]` |  |
+| snuba.eapItemsConsumer.affinity | object | `{}` |  |
+| snuba.eapItemsConsumer.containerSecurityContext | object | `{}` |  |
+| snuba.eapItemsConsumer.enabled | bool | `true` |  |
+| snuba.eapItemsConsumer.env | list | `[]` |  |
+| snuba.eapItemsConsumer.livenessProbe.enabled | bool | `true` |  |
+| snuba.eapItemsConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
+| snuba.eapItemsConsumer.livenessProbe.periodSeconds | int | `320` |  |
+| snuba.eapItemsConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.eapItemsConsumer.nodeSelector | object | `{}` |  |
+| snuba.eapItemsConsumer.replicas | int | `1` |  |
+| snuba.eapItemsConsumer.resources | object | `{}` |  |
+| snuba.eapItemsConsumer.securityContext | object | `{}` |  |
+| snuba.eapItemsConsumer.topologySpreadConstraints | list | `[]` |  |
+| snuba.eapItemsSpanConsumer.affinity | object | `{}` |  |
+| snuba.eapItemsSpanConsumer.containerSecurityContext | object | `{}` |  |
+| snuba.eapItemsSpanConsumer.enabled | bool | `true` |  |
+| snuba.eapItemsSpanConsumer.env | list | `[]` |  |
+| snuba.eapItemsSpanConsumer.livenessProbe.enabled | bool | `true` |  |
+| snuba.eapItemsSpanConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
+| snuba.eapItemsSpanConsumer.livenessProbe.periodSeconds | int | `320` |  |
+| snuba.eapItemsSpanConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.eapItemsSpanConsumer.nodeSelector | object | `{}` |  |
+| snuba.eapItemsSpanConsumer.replicas | int | `1` |  |
+| snuba.eapItemsSpanConsumer.resources | object | `{}` |  |
+| snuba.eapItemsSpanConsumer.securityContext | object | `{}` |  |
+| snuba.eapItemsSpanConsumer.topologySpreadConstraints | list | `[]` |  |
 | snuba.genericMetricsCountersConsumer.affinity | object | `{}` |  |
 | snuba.genericMetricsCountersConsumer.containerSecurityContext | object | `{}` |  |
 | snuba.genericMetricsCountersConsumer.enabled | bool | `true` |  |
@@ -912,6 +1073,19 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.genericMetricsDistributionConsumer.resources | object | `{}` |  |
 | snuba.genericMetricsDistributionConsumer.securityContext | object | `{}` |  |
 | snuba.genericMetricsDistributionConsumer.topologySpreadConstraints | list | `[]` |  |
+| snuba.genericMetricsGaugesConsumer.affinity | object | `{}` |  |
+| snuba.genericMetricsGaugesConsumer.containerSecurityContext | object | `{}` |  |
+| snuba.genericMetricsGaugesConsumer.enabled | bool | `true` |  |
+| snuba.genericMetricsGaugesConsumer.env | list | `[]` |  |
+| snuba.genericMetricsGaugesConsumer.livenessProbe.enabled | bool | `true` |  |
+| snuba.genericMetricsGaugesConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
+| snuba.genericMetricsGaugesConsumer.livenessProbe.periodSeconds | int | `320` |  |
+| snuba.genericMetricsGaugesConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.genericMetricsGaugesConsumer.nodeSelector | object | `{}` |  |
+| snuba.genericMetricsGaugesConsumer.replicas | int | `1` |  |
+| snuba.genericMetricsGaugesConsumer.resources | object | `{}` |  |
+| snuba.genericMetricsGaugesConsumer.securityContext | object | `{}` |  |
+| snuba.genericMetricsGaugesConsumer.topologySpreadConstraints | list | `[]` |  |
 | snuba.genericMetricsSetsConsumer.affinity | object | `{}` |  |
 | snuba.genericMetricsSetsConsumer.containerSecurityContext | object | `{}` |  |
 | snuba.genericMetricsSetsConsumer.enabled | bool | `true` |  |
@@ -992,6 +1166,19 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.outcomesConsumer.resources | object | `{}` |  |
 | snuba.outcomesConsumer.securityContext | object | `{}` |  |
 | snuba.outcomesConsumer.topologySpreadConstraints | list | `[]` |  |
+| snuba.profilingChunksConsumer.affinity | object | `{}` |  |
+| snuba.profilingChunksConsumer.containerSecurityContext | object | `{}` |  |
+| snuba.profilingChunksConsumer.env | list | `[]` |  |
+| snuba.profilingChunksConsumer.livenessProbe.enabled | bool | `true` |  |
+| snuba.profilingChunksConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
+| snuba.profilingChunksConsumer.livenessProbe.periodSeconds | int | `320` |  |
+| snuba.profilingChunksConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.profilingChunksConsumer.nodeSelector | object | `{}` |  |
+| snuba.profilingChunksConsumer.replicas | int | `1` |  |
+| snuba.profilingChunksConsumer.resources | object | `{}` |  |
+| snuba.profilingChunksConsumer.securityContext | object | `{}` |  |
+| snuba.profilingChunksConsumer.sidecars | list | `[]` |  |
+| snuba.profilingChunksConsumer.topologySpreadConstraints | list | `[]` |  |
 | snuba.profilingFunctionsConsumer.affinity | object | `{}` |  |
 | snuba.profilingFunctionsConsumer.containerSecurityContext | object | `{}` |  |
 | snuba.profilingFunctionsConsumer.env | list | `[]` |  |
@@ -1054,6 +1241,18 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.spansConsumer.resources | object | `{}` |  |
 | snuba.spansConsumer.securityContext | object | `{}` |  |
 | snuba.spansConsumer.topologySpreadConstraints | list | `[]` |  |
+| snuba.subscriptionConsumerEapSpans.affinity | object | `{}` |  |
+| snuba.subscriptionConsumerEapSpans.containerSecurityContext | object | `{}` |  |
+| snuba.subscriptionConsumerEapSpans.enabled | bool | `true` |  |
+| snuba.subscriptionConsumerEapSpans.env | list | `[]` |  |
+| snuba.subscriptionConsumerEapSpans.livenessProbe.enabled | bool | `true` |  |
+| snuba.subscriptionConsumerEapSpans.livenessProbe.initialDelaySeconds | int | `5` |  |
+| snuba.subscriptionConsumerEapSpans.livenessProbe.periodSeconds | int | `320` |  |
+| snuba.subscriptionConsumerEapSpans.nodeSelector | object | `{}` |  |
+| snuba.subscriptionConsumerEapSpans.replicas | int | `1` |  |
+| snuba.subscriptionConsumerEapSpans.resources | object | `{}` |  |
+| snuba.subscriptionConsumerEapSpans.securityContext | object | `{}` |  |
+| snuba.subscriptionConsumerEapSpans.topologySpreadConstraints | list | `[]` |  |
 | snuba.subscriptionConsumerEvents.affinity | object | `{}` |  |
 | snuba.subscriptionConsumerEvents.containerSecurityContext | object | `{}` |  |
 | snuba.subscriptionConsumerEvents.enabled | bool | `true` |  |
@@ -1109,6 +1308,8 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | symbolicator.api.autoscaling.maxReplicas | int | `5` |  |
 | symbolicator.api.autoscaling.minReplicas | int | `2` |  |
 | symbolicator.api.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
+| symbolicator.api.cleaner.enabled | bool | `true` |  |
+| symbolicator.api.cleaner.sleepInterval | int | `3600` |  |
 | symbolicator.api.config | string | `"# See: https://getsentry.github.io/symbolicator/#configuration\ncache_dir: \"/data\"\nbind: \"0.0.0.0:3021\"\nlogging:\n  level: \"warn\"\nmetrics:\n  statsd: null\n  prefix: \"symbolicator\"\nsentry_dsn: null\nconnect_to_reserved_ips: true\n# caches:\n#   downloaded:\n#     max_unused_for: 1w\n#     retry_misses_after: 5m\n#     retry_malformed_after: 5m\n#   derived:\n#     max_unused_for: 1w\n#     retry_misses_after: 5m\n#     retry_malformed_after: 5m\n#   diagnostics:\n#     retention: 1w"` |  |
 | symbolicator.api.containerSecurityContext | object | `{}` |  |
 | symbolicator.api.env | list | `[]` |  |
@@ -1122,7 +1323,6 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | symbolicator.api.securityContext | object | `{}` |  |
 | symbolicator.api.topologySpreadConstraints | list | `[]` |  |
 | symbolicator.api.usedeployment | bool | `true` |  |
-| symbolicator.cleanup.enabled | bool | `false` |  |
 | symbolicator.enabled | bool | `false` |  |
 | system.adminEmail | string | `""` |  |
 | system.public | bool | `false` |  |
@@ -1138,6 +1338,9 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | vroom.containerSecurityContext | object | `{}` |  |
 | vroom.env | list | `[]` |  |
 | vroom.nodeSelector | object | `{}` |  |
+| vroom.persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
+| vroom.persistence.enabled | bool | `true` |  |
+| vroom.persistence.size | string | `"10Gi"` |  |
 | vroom.probeFailureThreshold | int | `5` |  |
 | vroom.probeInitialDelaySeconds | int | `10` |  |
 | vroom.probePeriodSeconds | int | `10` |  |
@@ -1151,197 +1354,8 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | vroom.volumeMounts | list | `[]` |  |
 | vroom.volumes | list | `[]` |  |
 | zookeeper.enabled | bool | `true` |  |
+| zookeeper.image.repository | string | `"bitnamilegacy/zookeeper"` |  |
 | zookeeper.nameOverride | string | `"zookeeper-clickhouse"` |  |
 | zookeeper.nodeSelector | object | `{}` |  |
 | zookeeper.replicaCount | int | `1` |  |
 
-## NGINX and/or Ingress
-
-By default, NGINX is enabled to allow sending the incoming requests to [Sentry Relay](https://getsentry.github.io/relay/) or the Django backend depending on the path. When Sentry is meant to be exposed outside of the Kubernetes cluster, it is recommended to disable NGINX and let the Ingress do the same. It's recommended to go with the go to Ingress Controller, [NGINX Ingress](https://kubernetes.github.io/ingress-nginx/) but others should work as well.
-
-## Sentry secret key
-
-If no `sentry.existingSecret` value is specified, for your security, the [`system.secret-key`](https://develop.sentry.dev/config/#general) is generated for you on the first installation and stored in a kubernetes secret.
-
-If `sentry.existingSecret` / `sentry.existingSecretKey` values are provided, those secrets will be used.
-
-
-## Symbolicator and or JavaScript source maps
-
-For getting native stacktraces and minidumps symbolicated with debug symbols (e.g. iOS/Android), you need to enable Symbolicator via
-
-```yaml
-symbolicator:
-  enabled: true
-```
-
-However, you also need to share the data between sentry-worker and sentry-web. This can be done in different ways:
-
-- Using Cloud Storage like GCP GCS or AWS S3, see `filestore.backend` in `values.yaml`
-- Using a filesystem like
-
-```yaml
-filestore:
-  filesystem:
-    persistence:
-      persistentWorkers: true
-      # storageClass: 'efs-storage' # see note below
-```
-
-Note: If you need to run or cannot avoid running sentry-worker and sentry-web on different cluster nodes, you need to set `filestore.filesystem.persistence.accessMode: ReadWriteMany` or might get problems. HOWEVER, [not all volume drivers support it](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes), like AWS EBS or GCP disks.
-So you would want to create and use a `StorageClass` with a supported volume driver like [AWS EFS](https://github.com/kubernetes-sigs/aws-efs-csi-driver)
-
-Its also important having `connect_to_reserved_ips: true` in the symbolicator config file, which this Chart defaults to.
-
-#### Source Maps
-
-To get javascript source map processing working, you need to activate sourcemaps, which in turn activates the memcached dependency:
-
-```yaml
-sourcemaps:
-  enabled: true
-```
-
-For details on the background see this blog post: https://engblog.yext.com/post/sentry-js-source-maps
-
-
-## Geolocation
-
-[Geolocation of IP addresses](https://develop.sentry.dev/self-hosted/geolocation/) is supported if you provide a GeoIP database:
-
-Example values.yaml:
-
-```yaml
-
-relay:
-  # provide a volume for relay that contains the geoip database
-  volumes:
-    - name: geoip
-      hostPath:
-        path: /geodata
-        type: Directory
-
-
-sentry:
-  web:
-    # provide a volume for sentry-web that contains the geoip database
-    volumes:
-      - name: geoip
-        hostPath:
-          path: /geodata
-          type: Directory
-
-  worker:
-    # provide a volume for sentry-worker that contains the geoip database
-    volumes:
-      - name: geoip
-        hostPath:
-          path: /geodata
-          type: Directory
-
-
-# enable and reference the volume
-geodata:
-  volumeName: geoip
-  # mountPath of the volume containing the database
-  mountPath: /geodata
-  # path to the geoip database inside the volumemount
-  path: /geodata/GeoLite2-City.mmdb
-```
-
-or
-
-Warning:
-storage must support ReadWriteMany
-
-```yaml
-# enable and reference the volume
-geodata:
-  accountID: "example"
-  licenseKey: "example"
-  editionIDs: "example"
-  persistence:
-    ## If defined, storageClassName: <storageClass>
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    # storageClass: ""
-    size: 1Gi
-  volumeName: "data-sentry-geoip"
-  # mountPath of the volume containing the database
-  mountPath: "/usr/share/GeoIP"
-  # path to the geoip database inside the volumemount
-  path: "/usr/share/GeoIP/GeoLite2-City.mmdb"
-```
-
-## External Kafka configuration
-
-You can either provide a single host, which is there by default in `values.yaml`, like this:
-
-```yaml
-externalKafka:
-  ## Hostname or ip address of external kafka
-  ##
-  host: "kafka-confluent"
-  port: 9092
-```
-
-or you can feed in a cluster of Kafka instances like below:
-
-```yaml
-externalKafka:
-  cluster:
-    ## List of Hostnames or ip addresses and ports of external kafka
-    - host: "233.5.100.28"
-      port: 9092
-    - host: "kafka-confluent-2"
-      port: 9093
-    - host: "kafka-confluent-3"
-      port: 9094
-```
-
-## External Postgres configuration
-
-You can either pass postgres connection credentials directly in `values.yaml`:
-
-```yaml
-externalPostgresql:
-  host: postgres
-  port: 5432
-  username: postgres
-  password: postgres
-  database: sentry
-```
-
-or use existing `secret` like in the example below:
-
-```yaml
-externalPostgresql:
-  existingSecret: secret-name
-  existingSecretKeys:
-    password: password
-    username: username
-    database: database
-    port: port
-    host: host
-```
-
-it is possible to define which properties should be taken from secret or `values.yaml`, example below only takes `username` and `password` values from the secret:
-
-```yaml
-externalPostgresql:
-  existingSecret: secret-name
-  existingSecretKeys:
-    password: password
-    username: username
-  port: 8000
-  host: postgres
-  database: sentry
-```
-
-> ⚠️ `.Values.externalPostgresql.existingSecretKey` is deprecated, `.Values.externalPostgresql.existingSecretKeys.password` should be used instead.
-
-# Usage
-
-- [AWS + Terraform](docs/usage-aws-terraform.md)
-- [DigitalOcean](docs/usage-digitalocean.md)
